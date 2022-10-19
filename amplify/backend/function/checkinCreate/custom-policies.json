@@ -1,0 +1,6 @@
+[
+    {
+      "Action": ["dynamodb:PutItem", "dynamoDB:Query"],
+      "Resource": ["arn:aws:dynamodb:ap-southeast-1:*:table/CheckinTicket"]
+    }
+]

@@ -1,0 +1,10 @@
+[
+    {
+      "Action": ["dynamodb:GetItem", "dynamodb:Query"],
+      "Resource": ["arn:aws:dynamodb:ap-southeast-1:*:table/DealMaster*", "arn:aws:dynamodb:ap-southeast-1:*:table/CheckinTicket*", "arn:aws:dynamodb:ap-southeast-1:*:table/VoucherUser/index/transactionId-index"]
+    },
+    {
+      "Action": ["lambda:InvokeFunction"],
+      "Resource": ["arn:aws:lambda:ap-southeast-1:*:function:dealuserHashValidator*"]
+    }
+  ]

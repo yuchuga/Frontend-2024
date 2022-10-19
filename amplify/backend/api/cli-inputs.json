@@ -1,0 +1,145 @@
+{
+    "version": 1,
+    "paths": {
+      "/cloudfront/cache/invalidate": {
+        "name": "/cloudfront/cache/invalidate",
+        "lambdaFunction": "cloudfrontInvalidateCache",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create"
+          ]
+        }
+      },
+      "/stripe/webhook/listener": {
+        "name": "/stripe/webhook/listener",
+        "lambdaFunction": "stripeWebhookListener",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/stripe/account/create": {
+        "name": "/stripe/account/create",
+        "lambdaFunction": "stripeAccountCreate",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create",
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      },
+      "/stripe/account/create/login": {
+        "name": "/stripe/account/create/login",
+        "lambdaFunction": "stripeAccountCreateLoginLink",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create",
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      },
+      "/stripe/account/retrieve": {
+        "name": "/stripe/account/retrieve",
+        "lambdaFunction": "stripeAccountRetrieve",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create",
+            "read",
+            "update",
+            "delete"
+          ]
+        }
+      },
+      "/stripe/payment/create-link": {
+        "name": "/stripe/payment/create-link",
+        "lambdaFunction": "stripePaymentCreateLink",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create",
+            "read",
+            "update"
+          ]
+        }
+      },
+      "/stripe/webhook/account/listener": {
+        "name": "/stripe/webhook/account/listener",
+        "lambdaFunction": "stripeWebhookAccountListener",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/email/sender": {
+        "name": "/email/sender",
+        "lambdaFunction": "emailSender",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "create",
+            "read",
+            "update"
+          ]
+        }
+      },
+      "/googlemap/address/autocomplete": {
+        "name": "/googlemap/address/autocomplete",
+        "lambdaFunction": "googlemapAddressAutocomplete",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/googlemap/address/geocode": {
+        "name": "/googlemap/address/geocode",
+        "lambdaFunction": "googlemapAddressAutocomplete",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/stripe/key/retrieve": {
+        "name": "/stripe/key/retrieve",
+        "lambdaFunction": "stripeKeyRetrieve",
+        "permissions": {
+          "setting": "private",
+          "auth": [
+            "read"
+          ]
+        }
+      },
+      "/checkin/masterlist": {
+        "name": "/checkin/masterlist",
+        "lambdaFunction": "checkinRetrieve",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/checkin/webform": {
+        "name": "/checkin/webform",
+        "lambdaFunction": "checkinCreate",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/webform/{category}/group": {
+        "name": "/webform/{category}/group",
+        "lambdaFunction": "webFormGroup",
+        "permissions": {
+          "setting": "open"
+        }
+      },
+      "/webform/users/{formId}": {
+        "name": "/webform/users/{formId}",
+  
+        "lambdaFunction": "webFormGroup",
+        "permissions": {
+          "setting": "open"
+        }
+      }
+    }
+  }
