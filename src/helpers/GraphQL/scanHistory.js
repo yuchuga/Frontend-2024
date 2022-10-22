@@ -1,16 +1,17 @@
 import { API, graphqlOperation } from 'aws-amplify'
-import { scanHistoryByVoucherId, scanHistoryByMerchantId } from '../../graphql/queries'
-import { createScanHistory, updateScanHistory } from '../../graphql/mutations'
+import { scanHistoryByVoucherId, scanHistoryByMerchantId, scanHistoryByCreatedBy } from '../../graphql/queries'
+import { createScanHistory, updateScanHistory, deleteScanHistory } from '../../graphql/mutations'
 import { guidGenerator } from '../../utils'
 import { setVoucherToRedeemed } from './voucherUser'
 import amplitude from 'amplitude-js'
 
 //Post API
-export const createScanHistoryEntries = async (webForm, voucherUser, dealMaster, scanData) => {
+export const createScanHistoryEntries = async (webForm, voucherUser, dealMaster, scanData, createdBy) => {
   try {
     const timestamp = new Date().toISOString()
+    const id = guidGenerator()
     const item = {
-      id: guidGenerator(),
+      id: id,
       firstName: webForm.firstName,
       lastName: webForm.lastName,
       email: webForm.email,
@@ -18,16 +19,23 @@ export const createScanHistoryEntries = async (webForm, voucherUser, dealMaster,
       merchantId: dealMaster.merchant_id,
       dealId: dealMaster.pk,
       scanStatus: JSON.parse(scanData.text),
+      createdBy: createdBy,
       createdAt: timestamp,
       updatedAt: timestamp
     }
-
     const result = await API.graphql(graphqlOperation(createScanHistory, { input: item }))
-    await setVoucherToRedeemed(voucherUser)
-    return result.data.createScanHistory
+    const redeemResult = await setVoucherToRedeemed(voucherUser)
+    if (!redeemResult) {
+      // revert scan history entry if there is an error
+      await API.graphql(graphqlOperation(deleteScanHistory, { input: {id: id} }))
+      throw('Error in setVoucherToRedeemed')
+    } else {
+      return result.data.createScanHistory
+    }
   } catch (e) {
     amplitude.getInstance().logEventWithGroups('Error - createScanHistoryEntries', { 'details': e })
     console.error('Error in createScanHistoryEntries', e)
+    throw e
   }
 }
 
@@ -72,6 +80,17 @@ export const getScanHistoryByMerchantId = async (merchantId) => {
   } catch (e) {
     amplitude.getInstance().logEventWithGroups('Error - getScanHistoryByMerchantId', { 'details': e })
     console.error('Error in getScanHistoryByMerchantId', e)
+    return []
+  }
+}
+
+export const getScanHistoryByCreatedBy = async (createdBy) => {
+  try {
+    const result = await API.graphql(graphqlOperation(scanHistoryByCreatedBy, { createdBy }))
+    return result.data.scanHistoryByCreatedBy.items
+  } catch (e) {
+    amplitude.getInstance().logEventWithGroups('Error - getScanHistoryByMerchantId', { 'details': e })
+    console.error('Error in getScanHistoryByCreatedBy', e)
     return []
   }
 }

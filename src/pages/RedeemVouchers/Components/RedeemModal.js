@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from "react-redux";
 import { Button, Modal, CloseButton } from 'react-bootstrap';
 import styled from 'styled-components';
 import Icon from '../../../../assets/images/avatar/plan-avatar-redeem.png';
@@ -8,7 +9,7 @@ import { createScanHistoryEntries, getScanHistoryByVoucherId, updateScanHistoryE
 const RedeemModal = (props) => {
 
   const result = props.data;
-  console.log('Result', result);
+  const user = useSelector(state => state.User.user)
   //Destructure variables
   const {dealMaster, checkinTicket, purchaseDate, transaction, voucherUser, webForm} = props.data;
 
@@ -27,7 +28,7 @@ const RedeemModal = (props) => {
         const updateResult = await updateScanHistoryEntries(scanHistory[0], webForm, voucherUser, dealMaster, props.scanData)
         console.log('updating', updateResult)
       } else {
-        const createResult = await createScanHistoryEntries(webForm, voucherUser, dealMaster, props.scanData)
+        const createResult = await createScanHistoryEntries(webForm, voucherUser, dealMaster, props.scanData, user.email)
         console.log('creating', createResult)
       }
       handleRedeemClose(true) //close modal -> pass data to parent -> open result modal
@@ -55,14 +56,15 @@ const RedeemModal = (props) => {
             <H2>Scanned QR - #{getConfirmationId(result)}</H2>
             <CloseButton onClick={() => handleRedeemClose()} />
           </Header>
-          <ModalTitle>{result?.dealMaster?.promotion_caption} - {result?.purchaseDate}</ModalTitle>
+          <ModalTitle>{result?.dealMaster?.promotion_caption}</ModalTitle>
+          <ModalTitle>Purchased on: {result?.purchaseDate}</ModalTitle>
         </ModalHeader>
 
         <ModalBody>
           <RedeemContainer>
             <RedeemWrap>
               <RedeemIcon src={Icon} />
-              {(result?.checkinTicket?.length > 0) ? 
+              {(result?.checkinTicket) ? 
                 <CheckinButton>Checked-in</CheckinButton>
               : <NotCheckinButton>Not Checked-in</NotCheckinButton>
               }
@@ -71,7 +73,7 @@ const RedeemModal = (props) => {
               <H3>Bought by:</H3>
               <P>{result?.webForm?.firstName} {result?.webForm?.lastName}</P> 
               <H3>Check-in Person:</H3>
-              {(result?.checkinTicket?.length > 0) ? 
+              {(result?.checkinTicket) ? 
                 <P>{result?.checkinTicket?.firstName} {result?.checkinTicket?.lastName}</P>
               : <P>N/A</P> 
               }
@@ -106,6 +108,7 @@ const Header = styled.div`
 const ModalTitle = styled(Modal.Title)`
   font-size: 14px;
   color: #000;
+  margin-bottom: 0.625rem;
 `
 
 const ModalBody = styled(Modal.Body)`
@@ -151,7 +154,6 @@ const NotCheckinButton = styled(Button)`
   border-radius: 20px;
   width: 130px;
   height: 25px;
-  
   &:hover, &:focus {
     background: #EC536C; 
   }

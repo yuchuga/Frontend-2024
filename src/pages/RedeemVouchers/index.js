@@ -55,7 +55,7 @@ const RedeemVouchers = (props) => {
     }
     dispatch(setBreadcrumbItems('Redemption', breadcrumbItems))
     showScanning()
-    console.log(selectedMerchant.merchant_id)
+    // console.log(selectedMerchant.merchant_id)
   }, [selectedMerchant])
 
   //check Firebase remote config for merchantId
@@ -66,9 +66,9 @@ const RedeemVouchers = (props) => {
 
     const findRes = parseConfig.find(e => e.merchantId === merchantId)
     if (findRes?.enableScanning) {
-      setEnableScan(true)
-    } else {
       setEnableScan(false)
+    } else {
+      setEnableScan(true)
     }  
   }
 
@@ -84,17 +84,13 @@ const RedeemVouchers = (props) => {
       //Get voucherUser masterId from QR scan
       if (data) {
         const masterId = JSON.parse(data.text)['voucherUser-masterId'] 
-        console.log('masterId', masterId)
         
         //Query by masterId in VoucherUser table
         voucherUser = await getVoucherUserByMasterId(masterId)
-        // console.log('voucherUser', voucherUser)
         
         if (voucherUser.length > 0) {
           //Query dealId in DealMaster table
           dealMaster = await getDealById(voucherUser[0].dealId)
-          // console.log('dealMaster', dealMaster.merchant_id)
-          // console.log('merchant_Id', selectedMerchant.merchant_id)
 
           //Query by transactionId in Transaction table
           transaction = await getTransactionById(voucherUser[0].transactionId)
@@ -125,17 +121,13 @@ const RedeemVouchers = (props) => {
   
   const handleScan = async (data) => {
     try {
-      console.log('Scan Triggered >>>', scanning)
-      //Prevent scan triggering multiple times while processing
       if (!scanning) {
-        console.log('Not scanning yet >>>', data)
         if (data) {
+          JSON.parse(data.text) //ensure object format
           setScanning(true)
-          console.log('Have data >>>')
           const fetchResult = await fetchCreateScan(data);
           const hasError = await handleError(data, fetchResult);
-          console.log({hasError})
-
+          
           if (!hasError) { //no errors
             console.log('QRCode', data);
             setScanResult(data) 
@@ -148,12 +140,15 @@ const RedeemVouchers = (props) => {
       }
     } catch (e) {
       console.error(e);
+      setSuccessResult({...fetchResult, errorMsg: 'Invalid code'})
+      setShowRedeemModal(false)
+      setShowResultModal(true)
+      closeScan()
     } 
   }
 
   const handleError = async (data, fetchResult) => {
     try {
-      console.log('handleError', fetchResult)
       if (!fetchResult) {
         setScanning(false) //reset scan
         return true
@@ -162,7 +157,7 @@ const RedeemVouchers = (props) => {
       const masterId = JSON.parse(data.text)['voucherUser-masterId']; //ensure object format
 
       //check if QR code not in data.text & masterId format
-      if (!data?.text && masterId) {
+      if (!data?.text && !masterId) {
         setSuccessResult({...fetchResult, errorMsg: 'Invalid code'})
         setShowRedeemModal(false)
         setShowResultModal(true)
@@ -209,7 +204,6 @@ const RedeemVouchers = (props) => {
   }
 
   const handleClose = (params) => {
-    console.log('Child Params', params)
     //open scanner when click 'Scan Next' button in Redeem LandingModal
     if (params.scanNext) {
       setScan(true)
@@ -229,13 +223,10 @@ const RedeemVouchers = (props) => {
     return time;
   }
 
-  // console.log({enableScan})
-  // console.log({scanning})
-  // console.log({showResultModal})
   return (
     <>
     {enableScan === null ? <RedeemContainer fluid><SpinnerIcon /></RedeemContainer> :
-        enableScan === true ?
+        enableScan === false ? 
           <>
           {scan ?
             <ButWrap>
@@ -289,7 +280,6 @@ const RedeemContainer = styled(Container)`
   height: 70vh;
   padding: 0; 
   margin-bottom: 1.25rem;
-
   @media (max-height: 750px) {
     height: 67.5vh;
   }
@@ -302,7 +292,6 @@ const ButWrap = styled.div`
   display: flex;
   justify-content: flex-end;
   transform: translateY(-60px);
-  
   @media (max-width: 430px) {
     justify-content: flex-start;
     transform: translateY(-10px);
@@ -314,6 +303,7 @@ const RedeemWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 ` 
 
 const RedeemButton = styled(Button)`
@@ -323,12 +313,10 @@ const RedeemButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
-
   &:hover, &:focus {
     background: #7A6FBE;
     color: #fff;
   }
-
   @media (max-width: 360px) {
     font-size: 12px;
   }
@@ -339,7 +327,6 @@ const RedeemIcon = styled.img`
   width: 100px;
   height: 150px;
   margin-bottom: 1.25rem;
-
   @media (max-width: 360px) {
     width: 75px;
     height: 110px;
@@ -353,16 +340,14 @@ const QrWrap = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-
   @media (max-width: 475px) {
     height: 70vh;
-
+  }
   @media (max-height: 740px) {
     height: 67.5vh;
   }
   @media (max-height: 675px) {
     height: 62.5vh;
-  }
   }
 `
 
@@ -373,12 +358,10 @@ const QrButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
-
   &:hover, &:focus {
     background: #EC536C;
     color: #fff;
   }
-
   @media (max-width: 360px) {
     font-size: 12px;
   }
@@ -391,7 +374,6 @@ const SpinnerIcon = styled(Spinner)`
 const H1 = styled.h1`
   font-size: 18px;
   margin-bottom: 1rem;
-  
   @media (max-width: 360px) {
     font-size: 16px;
   }
@@ -401,7 +383,6 @@ const P = styled.p`
   font-size: 14px;
   margin-bottom: 1rem;
   text-align: center;
-
   @media (max-width: 360px) {
     font-size: 12px;
   }

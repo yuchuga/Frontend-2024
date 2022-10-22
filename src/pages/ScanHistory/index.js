@@ -4,10 +4,11 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux"; 
 import { format, parseISO, fromUnixTime } from 'date-fns'
 import styled from 'styled-components';
+//import Breadcrumb
 import { setBreadcrumbItems, setAlert } from "../../../store/actions";
 // custom components
 import RedeemLandingModal from '../RedeemVouchers/Components/RedeemLandingModal';
-import { getScanHistoryByMerchantId } from 'helpers/GraphQL/scanHistory';
+import { getScanHistoryByCreatedBy } from 'helpers/GraphQL/scanHistory';
 import { getVoucherUserByMasterId } from '../../../helpers/GraphQL/voucherUser';
 import { getDealById } from '../../../helpers/GraphQL/promotions';
 import { getTransactionById } from '../../../helpers/GraphQL/transactions';
@@ -46,12 +47,12 @@ const ScanHistory = (props) => {
     getHistory();
   }, [selectedMerchant])
 
-  //Query by merchantId in ScanHistory table  
+  //Query by createdBy(user email) in ScanHistory table  
   const getHistory = async () => {
     try {
       setLoading(true)
-      const history = await getScanHistoryByMerchantId(selectedMerchant.merchant_id)
-      console.log('Scan History by Merchant', history)
+      const history = await getScanHistoryByCreatedBy(user.email)
+      console.log('Scan History by User', history)
       for (let i = 0; i < history.length; i++) {
         const scanHistory = await fetchCreateScan(history[i].voucherId)
         history[i].data = scanHistory //push scanHistory data object into history array
@@ -156,7 +157,8 @@ const HistContainer = styled(Container)`
   height: 70vh;
   padding: 1.25rem;
   margin-bottom: 1rem;
-
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   @media (max-height: 750px) {
     height: 67.5vh;
   }
@@ -174,7 +176,6 @@ const SpinContainer = styled(Container)`
   height: 70vh;
   padding: 0; 
   margin-bottom: 1.25rem;
-
   @media (max-height: 750px) {
     height: 67.5vh;
   }
@@ -201,12 +202,10 @@ const DetailWrap = styled.div`
   width: 110%;
   margin-bottom: 0.625rem;
   transform: translateY(-5px);
-  
   @media (max-width: 430px) {
     width: 50%;
     transform: translateY(-10px);
   }
-  
   @media (max-width: 360px) {
     width: 25%;
   }
@@ -216,7 +215,6 @@ const ButWrap = styled.div`
   display: flex;
   justify-content: flex-end;
   transform: translateY(-60px);
-
   @media (max-width: 430px) {
     justify-content: flex-start;
     transform: translateY(-10px);
@@ -232,12 +230,10 @@ const HistButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
-
   &:hover, &:focus {
     background: #7A6FBE;
     color: #fff;
   }
-
   @media (max-width: 375px) {
     font-size: 12px;
   }
@@ -246,11 +242,9 @@ const HistButton = styled(Button)`
 const DetailButton = styled(Button)`
   background: #7A6FBE;
   margin-left: 1rem;
-
   @media (max-width: 430px) {
     width: 80px;
   }
-
   @media (max-width: 375px) {
     font-size: 12px;
   }
@@ -269,7 +263,6 @@ const H1 = styled.h1`
   font-weight: bold;
   color: #000;
   margin-bottom: 1.25rem;
-
   @media (max-width: 375px) {
     font-size: 16px;
   }
@@ -280,7 +273,6 @@ const P = styled.p`
   color: #000;
   line-height: 1.25rem;
   margin-bottom: 1rem;
-  
   @media (max-width: 375px) {
     font-size: 14px;
   }

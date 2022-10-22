@@ -12,24 +12,24 @@ const RedeemLandingModal = (props) => {
 
   useEffect(() => {
     lottie.loadAnimation({
+      name: 'success',
       container: container1.current, 
       renderer: 'svg',
       loop: true,
       autoplay: true,
       animationData: require('../../../../assets/lottie/tick.json')
-    })
-    return () => lottie.destroy(); //unmount component
-  }, [])
+    });
 
-  useEffect(() => {
     lottie.loadAnimation({
+      name: 'error',
       container: container2.current,
       renderer: 'svg',
       loop: true,
       autoplay: true,
       animationData: require('../../../../assets/lottie/fail.json')
-    })
-    return () => lottie.destroy(); 
+    });
+
+    return () => lottie.destroy(); //unmount component
   }, [])
 
   const handleClose = (params) => {
@@ -58,10 +58,10 @@ const RedeemLandingModal = (props) => {
               <CloseButton onClick={() => handleClose({showResultModal: false})} />
             </CloseWrap>
           </Header>
-          <H3>{result?.purchaseDate}</H3>
+          <H3>Purchased on: {result?.purchaseDate}</H3>
           {result?.errorMsg ? <Animation2 ref={container2} /> : <Animation1 ref={container1} />}
           <H2>Confirmation ID: #{getConfirmationId(result)}</H2>
-          {(result?.checkinTicket?.length > 0) ? 
+          {(result?.checkinTicket) ? 
             <CheckinButton>Checked-in</CheckinButton>
           : <NotCheckinButton>Not Checked-in</NotCheckinButton>
           }
@@ -76,7 +76,7 @@ const RedeemLandingModal = (props) => {
             <H3>Bought by:</H3>
             <P>{result?.webForm?.firstName} {result?.webForm?.lastName}</P>
             <H3>Check-in Person:</H3>
-            {(result?.checkinTicket?.length > 0) ? 
+            {(result?.checkinTicket) ? 
               <P>{result?.checkinTicket?.firstName} {result?.checkinTicket?.lastName}</P> 
             : <P>N/A</P>
             }
@@ -109,6 +109,7 @@ const Header = styled.div`
 
 const TitleWrap = styled.div`
   display: flex;
+  justify-content: center;
   margin: auto; //center title
 `
 
@@ -121,7 +122,6 @@ const ModalTitle = styled(Modal.Title)`
   color: #5ACA75;
   font-size: 18px;
   font-weight: bold;
-
   @media (max-width: 375px) {
     font-size: 16px;
   }
@@ -134,7 +134,6 @@ const ModalErrorTitle = styled(Modal.Title)`
   line-height: 1.5rem;
   width: 55%;
   text-align: center;
-  
   @media (max-width: 430px) {
     width: 70%;
   }

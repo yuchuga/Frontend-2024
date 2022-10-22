@@ -6,13 +6,13 @@ import { UncontrolledTooltip } from 'reactstrap';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
-import { getWebFormGroup, getPeopleInWebForm } from 'helpers/apiHelper';
+import { getWebFormGroup, getPeopleInWebForm } from '../../helpers/apiHelper';
 import { parseQueryString } from '../../utils';
 import styled from 'styled-components';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import AccessDenied from 'components/Common/accessDenied';
 import { BANK_ID, BANKID_REGEX, DRESS, CATEGORY_DND, GROUP_ENTRY, GROUP_NAME, GROUP_NAME2, GROUP_NOTE, GROUP_NAME_REGEX, MENU, OTHER_OPTION,
-        SCB_DND_TERMS, INDIVIDUAL_FUSION, INDIVIDUAL_FUSION_VEGETARIAN } from 'utils/constants';
+        SCB_DND_TERMS, INDIVIDUAL_FUSION, INDIVIDUAL_FUSION_VEGETARIAN } from '../../utils/constants';
 
 const DnD = (props) => {
   
@@ -62,8 +62,8 @@ const DnD = (props) => {
   const [peopleInGroup, setPeopleInGroup] =  useState([]);
   const [isMatch, setIsMatch] = useState(false);
   const [disableField, setDisableField] = useState(false);
-  const [groupNameDropdownErrorMessage, setGroupNameDropdownErrorMessage] = useState(false)
-  const [menuDropdownErrorMessage, setMenuDropdownErrorMessage] = useState(false)
+  const [groupNameDropdownError, setGroupNameDropdownError] = useState(false)
+  const [menuDropdownError, setMenuDropdownError] = useState(false)
   const [userId, setUserId] = useState('');
   const [isAccessDenied, setAccessDenied] = useState(null);
   const [creator, setCreator] = useState('')
@@ -87,7 +87,7 @@ const DnD = (props) => {
     if (!getGroup.error) {
       let parseGroup = JSON.parse(getGroup.body)
       let filterGroup = parseGroup.Items.filter(item => {
-        return item.status === '1' ;
+        return item.status === '1';
       });
       setArrGroup(filterGroup)
 
@@ -119,10 +119,11 @@ const DnD = (props) => {
 
   const getPeopleInGroup = async (group) => {
     let getPeople = await getPeopleInWebForm('0002', search)
+
     if (!getPeople.error) {
       let parsePeople = JSON.parse(getPeople.body)
       let filterPeople = parsePeople.Items.filter(item => {
-        return group === item.groupName && item.status === '1' ;
+        return group === item.groupName && item.status === '1';
       });
       setPeopleInGroup(filterPeople)
       
@@ -148,7 +149,6 @@ const DnD = (props) => {
       setIsMatch(false)
       setSelectMenu('')
       setDisableField(false)
-      
     } else {
       setShowAll(false)
       setShowBoth(true)
@@ -156,15 +156,14 @@ const DnD = (props) => {
       setValue('groupName', item.value)
       setDisableField(true)
     } 
-
-    setGroupNameDropdownErrorMessage(false)
-    setMenuDropdownErrorMessage(false)
+    setGroupNameDropdownError(false)
+    setMenuDropdownError(false)
   }
 
   const handleMenuChange = (selectMenu) => {
     setSelectMenu(selectMenu)
     setValue('menu', selectMenu.value)
-    setMenuDropdownErrorMessage(false)
+    setMenuDropdownError(false)
   }
 
   const matchGroupName = () => {
@@ -195,7 +194,7 @@ const DnD = (props) => {
       setValue('dress', '0')
       setIsIndividual(true)
     } else {
-      setValue('dress', dress )
+      setValue('dress', dress)
       setIsIndividual(false)
     }
     
@@ -230,7 +229,7 @@ const DnD = (props) => {
       if (matchGroupName() && selectGroup.value === OTHER_OPTION) {
         setIsMatch(true)
       } else if (menuChoice === undefined) {
-        setMenuDropdownErrorMessage(true)
+        setMenuDropdownEror(true)
       } else {
         setIsMatch(false)
         postMessage(output)
@@ -246,23 +245,13 @@ const DnD = (props) => {
 
   const onError = (errors) => {
     console.log(errors);
-
-    if (selectGroup.value) {
-      setGroupNameDropdownErrorMessage(false)
-    } else {
-      setGroupNameDropdownErrorMessage(true)
-    }
-   
-    if (selectMenu.value) {
-      setMenuDropdownErrorMessage(false)
-    } else {
-      setMenuDropdownErrorMessage(true)
-    }
-
+    selectGroup.value ? setGroupNameDropdown(false) : setGroupNameDropdown(true)
+    selectMenu.value ? setMenuDropdownError(false) : setMenuDropdownError(true)
   }
 
   const removeSpecialChar = (e) => {
     const {value, name} = e.target
+    
     if (name === 'groupName') {
       let str = value.replace({GROUP_NAME_REGEX}, '');
       setValue('groupName', str)
@@ -353,7 +342,7 @@ const DnD = (props) => {
                 />
               )}
             />
-            {groupNameDropdownErrorMessage && 
+            {groupNameDropdownError && 
             <P>Please select group name</P> }
             <ErrorMessage
               errors={errors}
@@ -425,7 +414,7 @@ const DnD = (props) => {
                 />
               )}
             />
-            {menuDropdownErrorMessage && 
+            {menuDropdownError && 
             <P>Please select menu</P> }
             <ErrorMessage
               errors={errors}
