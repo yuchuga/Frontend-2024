@@ -280,9 +280,11 @@ const RedeemContainer = styled(Container)`
   height: 70vh;
   padding: 0; 
   margin-bottom: 1.25rem;
+
   @media (max-height: 750px) {
     height: 67.5vh;
   }
+
   @media (max-height: 675px) {
     height: 62.5vh;
   }
@@ -292,6 +294,7 @@ const ButWrap = styled.div`
   display: flex;
   justify-content: flex-end;
   transform: translateY(-60px);
+
   @media (max-width: 430px) {
     justify-content: flex-start;
     transform: translateY(-10px);
@@ -313,10 +316,12 @@ const RedeemButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
+
   &:hover, &:focus {
     background: #7A6FBE;
     color: #fff;
   }
+
   @media (max-width: 360px) {
     font-size: 12px;
   }
@@ -327,6 +332,7 @@ const RedeemIcon = styled.img`
   width: 100px;
   height: 150px;
   margin-bottom: 1.25rem;
+
   @media (max-width: 360px) {
     width: 75px;
     height: 110px;
@@ -340,12 +346,15 @@ const QrWrap = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+
   @media (max-width: 475px) {
     height: 70vh;
   }
+
   @media (max-height: 740px) {
     height: 67.5vh;
   }
+  
   @media (max-height: 675px) {
     height: 62.5vh;
   }
@@ -358,10 +367,12 @@ const QrButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
+
   &:hover, &:focus {
     background: #EC536C;
     color: #fff;
   }
+
   @media (max-width: 360px) {
     font-size: 12px;
   }
@@ -374,6 +385,7 @@ const SpinnerIcon = styled(Spinner)`
 const H1 = styled.h1`
   font-size: 18px;
   margin-bottom: 1rem;
+
   @media (max-width: 360px) {
     font-size: 16px;
   }
@@ -383,6 +395,7 @@ const P = styled.p`
   font-size: 14px;
   margin-bottom: 1rem;
   text-align: center;
+
   @media (max-width: 360px) {
     font-size: 12px;
   }

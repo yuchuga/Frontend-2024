@@ -159,9 +159,11 @@ const HistContainer = styled(Container)`
   margin-bottom: 1rem;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+
   @media (max-height: 750px) {
     height: 67.5vh;
   }
+  
   @media (max-height: 675px) {
     height: 62.5vh;
   }
@@ -176,9 +178,11 @@ const SpinContainer = styled(Container)`
   height: 70vh;
   padding: 0; 
   margin-bottom: 1.25rem;
+
   @media (max-height: 750px) {
     height: 67.5vh;
   }
+
   @media (max-height: 675px) {
     height: 62.5vh;
   }
@@ -202,10 +206,12 @@ const DetailWrap = styled.div`
   width: 110%;
   margin-bottom: 0.625rem;
   transform: translateY(-5px);
+
   @media (max-width: 430px) {
     width: 50%;
     transform: translateY(-10px);
   }
+
   @media (max-width: 360px) {
     width: 25%;
   }
@@ -215,6 +221,7 @@ const ButWrap = styled.div`
   display: flex;
   justify-content: flex-end;
   transform: translateY(-60px);
+
   @media (max-width: 430px) {
     justify-content: flex-start;
     transform: translateY(-10px);
@@ -230,10 +237,12 @@ const HistButton = styled(Button)`
   color: #fff;
   font-size: 14px;
   cursor: pointer;
+  
   &:hover, &:focus {
     background: #7A6FBE;
     color: #fff;
   }
+
   @media (max-width: 375px) {
     font-size: 12px;
   }
@@ -242,6 +251,7 @@ const HistButton = styled(Button)`
 const DetailButton = styled(Button)`
   background: #7A6FBE;
   margin-left: 1rem;
+
   @media (max-width: 430px) {
     width: 80px;
   }
@@ -263,6 +273,7 @@ const H1 = styled.h1`
   font-weight: bold;
   color: #000;
   margin-bottom: 1.25rem;
+
   @media (max-width: 375px) {
     font-size: 16px;
   }
@@ -273,6 +284,7 @@ const P = styled.p`
   color: #000;
   line-height: 1.25rem;
   margin-bottom: 1rem;
+
   @media (max-width: 375px) {
     font-size: 14px;
   }

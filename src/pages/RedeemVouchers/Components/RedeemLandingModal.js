@@ -122,6 +122,7 @@ const ModalTitle = styled(Modal.Title)`
   color: #5ACA75;
   font-size: 18px;
   font-weight: bold;
+
   @media (max-width: 375px) {
     font-size: 16px;
   }
@@ -134,12 +135,15 @@ const ModalErrorTitle = styled(Modal.Title)`
   line-height: 1.5rem;
   width: 55%;
   text-align: center;
+
   @media (max-width: 430px) {
     width: 70%;
   }
+
   @media (max-width: 375px) {
     font-size: 16px;
   }
+  
   @media (max-width: 320px) {
     width: 90%;
   }
@@ -148,6 +152,7 @@ const ModalErrorTitle = styled(Modal.Title)`
 const Error = styled.div`
   margin-top: 0.3rem;
   font-size: 18px;
+
   @media (max-width: 375px) {
     font-size: 16px;
   }
@@ -208,6 +213,7 @@ const NotCheckinButton = styled(Button)`
   width: 130px;
   height: 25px;
   margin-bottom: 1rem;
+
   &:hover, &:focus {
     background: #EC536C;
   }
