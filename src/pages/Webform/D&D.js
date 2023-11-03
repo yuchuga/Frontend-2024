@@ -383,7 +383,10 @@ const DnD = (props) => {
               render={({ message }) => <P>{message}</P>}
             />
             {isMatch && 
-            <P>Matching group name detected: {getValues('groupName').toUpperCase()}. Please submit a unique name or select from the above field.</P>}
+              <P>
+                Matching group name detected: {getValues('groupName').toUpperCase()}.Please submit a unique name or select from the above field.
+              </P>
+            }
           </FormField>
           
           <FormField>

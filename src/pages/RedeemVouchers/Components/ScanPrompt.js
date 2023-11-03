@@ -29,6 +29,7 @@ const ScanContainer = styled(Container)`
   background: white;
   height: 70vh;
   padding: 0.875rem; 
+  
   @media (max-height: 750px) {
     height: 67.5vh;
   }

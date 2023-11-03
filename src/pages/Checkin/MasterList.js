@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { IoIosArrowDroprightCircle, IoIosCheckbox } from 'react-icons/io';
 
 const MasterList = (props) => {
-
+  
   const trxId = props.match.params.transactionId;
   const search = props.location.search;
 
@@ -19,7 +19,12 @@ const MasterList = (props) => {
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
+    const controller = new AbortController(); //fix memory leak
+    const signal = controller.signal
     fetchTickets();
+    return () => {
+      controller.abort()
+    }
   }, [])
   
   /*

@@ -6,7 +6,7 @@ import Icon from '../../../../assets/images/avatar/plan-avatar-redeem.png';
 // custom components
 import { createScanHistoryEntries, getScanHistoryByVoucherId, updateScanHistoryEntries } from '../../../../helpers/GraphQL/scanHistory';
 
-const RedeemModal = (props) => {
+const RedeemModal = (props) => { //destructure props using ({data, scanData, show}) 
 
   const result = props.data;
   const user = useSelector(state => state.User.user)
