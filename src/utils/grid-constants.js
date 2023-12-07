@@ -18,6 +18,7 @@ export function AgGridBase (props) {
         suppressColumnMoveAnimation={true}
         suppressColumnVirtualisation={true}
         suppressDragLeaveHidesColumns={true}
+        gridOptions={{ enableCellTextSelection: props.enableCopy }}
         onGridReady={props.onGridReady}
         onCellValueChanged={props.onCellValueChanged}
         onSelectionChanged={props.onSelectionChanged}
@@ -47,8 +48,8 @@ export const filterParams = {
   closeOnApply: true,
   filterOptions: ['contains'],
   textFormatter: (value) => {
-    if (value == null) return null
-    if (!(typeof valye === 'string' || value instanceof String)) return String(value)
+    if (value === null) return null
+    if (!(typeof value === 'string' || value instanceof String)) return String(value)
 
     return value
       .toLowerCase()

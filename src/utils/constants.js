@@ -31,3 +31,20 @@ export const WEBFORM_ID = "0001"
 export const MERCHANT_TEXT = 'This feature is only available for merchants hosting or selling event tickets'
 export const PARTNERSHIP_TEXT = 'If you wish to host/sell event tickets, please contact our partnership team at'
 export const PARTNERSHIP_EMAIL = 'mailto:partnership@cardspal.com'
+
+//EDT
+export const EndPoints = {
+  ACCOUNT_CLOSURE: '/blaze-bb-static-rs/cif',
+  ACCOUNT_CLOSURE_HOLDINGS: '/blaze-bb-static-rs/holdings/nettradesbycustodyacct',
+  ACCOUNT_CLOSURE_REQUEST: '/blaze-bb-static-rs/customer/close/request',
+  ACCOUNT_CLOSURE_APPROVE: '/blaze-bb-static-rs/customer/close/approve',  
+  BOOKING_COUNTERPARTY: '/blaze-bb-booking-rs/bb-gmp-cpty'
+};
+
+export const AccountClose = {
+  successMsg: 'Closed account successfully',
+  errorMsg: 'Error in closing account',
+  searchErrorMsg: 'Invalid CIF'
+};
+
+export const notifyConfig = { timeOut: '10000'};
