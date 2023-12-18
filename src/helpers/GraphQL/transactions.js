@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify'
 import amplitude from 'amplitude-js';
- import { GENERIC_ERROR_MESSAGE } from '../../utils/constants'
-import { transactionByDealId, getTransaction } from '../../graphql/queries'
+// import { GENERIC_ERROR_MESSAGE } from '../../utils/constants'
+// import { transactionByDealId, getTransaction } from '../../graphql/queries'
 
 export const getTransactionsByDeal = async (dealId, filter) => {
     try {
@@ -14,24 +14,23 @@ export const getTransactionsByDeal = async (dealId, filter) => {
         if (filter) {
             params.filter = {...filter}
         }
-        // console.log('getTransactionsByDeal ', {params})
         do {   
-            const transaction = await API.graphql(graphqlOperation(transactionByDealId, params))
-            const items = transaction.data.transactionByDealId.items
+            // const transaction = await API.graphql(graphqlOperation(transactionByDealId, params))
+            // const items = transaction.data.transactionByDealId.items
             
-            if (items.length > 0) {
-                result = result.concat(items)
-            }
+            // if (items.length > 0) {
+            //     result = result.concat(items)
+            // }
     
-            const nextToken = transaction.data.transactionByDealId.nextToken
-            params.nextToken = nextToken
+            // const nextToken = transaction.data.transactionByDealId.nextToken
+            // params.nextToken = nextToken
         } while (params.nextToken)
 
         return result
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getTransactionsByDeal', { 'details': e })
         console.error('Error on getTransactionsByDeal', e)
-        throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Retrieve Transaction By Deal] `
+        // throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Retrieve Transaction By Deal] `
     }
 }
 
@@ -47,7 +46,7 @@ export const getAllTransactionsByDealIds = async (dealIds) => {
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getAllTransactionsByDealId', { 'details': e })
         console.error('Error on getAllTransactionsByDealId', e)
-        throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Retrieve Transaction By Deal] `
+        // throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Retrieve Transaction By Deal] `
     }
 }
 
@@ -62,14 +61,14 @@ export const getTotalRevenueByDeal = async (dealId) => {
 
         return `SGD ${totalRevenue.toFixed(2)}`
     } catch (e) {
-        throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Total Revenue Computation] `
+        // throw e ? e.message :`${GENERIC_ERROR_MESSAGE}[Total Revenue Computation] `
     }
 }
 
 export const getTransactionById = async (id) => {
     try {
-        const result = await API.graphql(graphqlOperation(getTransaction, {id}))
-        return result.data.getTransaction
+        // const result = await API.graphql(graphqlOperation(getTransaction, {id}))
+        // return result.data.getTransaction
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getTransactionById', { 'details': e })
         console.error('Error on getTransactionById', e)

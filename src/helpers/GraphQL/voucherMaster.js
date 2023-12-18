@@ -1,12 +1,12 @@
 import { API, graphqlOperation } from 'aws-amplify'
-import { voucherByCode, voucherByDealId, dealByMerchantId } from '../../graphql/queries'
-import { createVoucherMaster, deleteVoucherMaster} from '../../graphql/mutations'
+// import { voucherByCode, voucherByDealId, dealByMerchantId } from '../../graphql/queries'
+// import { createVoucherMaster, deleteVoucherMaster} from '../../graphql/mutations'
 import amplitude from 'amplitude-js';
 
 export const getVoucherMasterByCode = async (code) => {
     try {
-        const result = await API.graphql(graphqlOperation(voucherByCode, { code }))
-        return result.data.voucherByCode
+        // const result = await API.graphql(graphqlOperation(voucherByCode, { code }))
+        // return result.data.voucherByCode
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getVoucherMasterByCode', { 'details': e })
         console.error('Error on getVoucherMasterByCode', e)
@@ -41,9 +41,8 @@ export const createVoucher = async (voucher) => {
         const input = {
             ...voucher
         }
-        const result = await API.graphql(graphqlOperation(createVoucherMaster, { input }))
-        
-        return result.data.createVoucherMaster
+        // const result = await API.graphql(graphqlOperation(createVoucherMaster, { input }))
+        // return result.data.createVoucherMaster
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - createVoucher', { 'details': e })
         console.error('error on createVoucher ', e)
@@ -61,15 +60,15 @@ export const listVouchersByDealId = async (dealId) => {
     // get all vouchers belong to deal
     do {
         try {
-            const vouchersResult = await API.graphql(graphqlOperation(voucherByDealId, params))
-            const items = vouchersResult.data.voucherByDealId.items
+            // const vouchersResult = await API.graphql(graphqlOperation(voucherByDealId, params))
+            // const items = vouchersResult.data.voucherByDealId.items
             
-            if (items.length > 0) {
-                vouchers = vouchers.concat(items)
-            }
+            // if (items.length > 0) {
+            //     vouchers = vouchers.concat(items)
+            // }
 
-            const nextToken = vouchersResult.data.voucherByDealId.nextToken
-            params.nextToken = nextToken
+            // const nextToken = vouchersResult.data.voucherByDealId.nextToken
+            // params.nextToken = nextToken
         } catch(e) {
             console.error('error on graphql listVouchersByDealId ', e.errors)
             amplitude.getInstance().logEventWithGroups('Error - listVouchersByDealId', { 'details': JSON.stringify(e.errors) })
@@ -87,15 +86,15 @@ export const listVouchersByMerchantId = async (merchantId) => {
     }
     // get all deals belonging to merchnat
     do {
-        const dealsResult = await API.graphql(graphqlOperation(dealByMerchantId, params))
-        const items = dealsResult.data.dealByMerchantId.items
+        // const dealsResult = await API.graphql(graphqlOperation(dealByMerchantId, params))
+        // const items = dealsResult.data.dealByMerchantId.items
         
-        if (items.length > 0) {
-            deals = deals.concat(items)
-        }
+        // if (items.length > 0) {
+        //     deals = deals.concat(items)
+        // }
 
-        const nextToken = dealsResult.data.dealByMerchantId.nextToken
-        params.nextToken = nextToken
+        // const nextToken = dealsResult.data.dealByMerchantId.nextToken
+        // params.nextToken = nextToken
     } while (params.nextToken)
 
     let vouchers = []
@@ -112,8 +111,8 @@ export const deleteVouchersByDeal = async (dealId) => {
         const vouchers = await listVouchersByDealId(dealId)
 
         for (let i = 0; i < vouchers.length; i++) {
-            const item = vouchers[i]
-            await API.graphql(graphqlOperation(deleteVoucherMaster, { input: {id: item.id} }))    
+            // const item = vouchers[i]
+            // await API.graphql(graphqlOperation(deleteVoucherMaster, { input: {id: item.id} }))    
         }
         return true
     } catch (e) {

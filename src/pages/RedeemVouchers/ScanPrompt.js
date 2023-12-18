@@ -1,13 +1,12 @@
 import React from "react";
 import { Button, Container } from "reactstrap";
 import styled from 'styled-components';
-import notAvailable from '../../../../assets/images/notAvailable.png';
-import { MERCHANT_TEXT, PARTNERSHIP_TEXT, PARTNERSHIP_EMAIL } from "utils/constants";
+import { MERCHANT_TEXT, PARTNERSHIP_TEXT, PARTNERSHIP_EMAIL } from '../../utils/constants';
 
 const ScanPrompt = () => {
   return (
     <ScanContainer fluid>
-      <ScanImage fluid src={notAvailable} />
+      <ScanImage fluid src={null} />
         <H3>{MERCHANT_TEXT}</H3>
         <P>{PARTNERSHIP_TEXT}{" "}
           <a href={PARTNERSHIP_EMAIL}>

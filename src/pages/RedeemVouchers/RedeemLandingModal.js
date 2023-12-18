@@ -17,7 +17,7 @@ const RedeemLandingModal = (props) => {
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      animationData: require('../../../../assets/lottie/tick.json')
+      // animationData: require('../../assets/lottie/tick.json')
     });
 
     lottie.loadAnimation({
@@ -26,7 +26,7 @@ const RedeemLandingModal = (props) => {
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      animationData: require('../../../../assets/lottie/fail.json')
+      // animationData: require('../../assets/lottie/fail.json')
     });
 
     return () => lottie.destroy(); //unmount component

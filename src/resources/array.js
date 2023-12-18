@@ -8,7 +8,6 @@ return (a.bookCode < b.bookCode) ? -1 : (a.bookCode > b.bookCode) ? 1 : 0
 return a.id - b.id //ascending
 return b.id - a.id //descending
 
-
 const sortData = array.sort((a, b) => a.family.localeCompare(b.family))
 const sortData2 = _.sortBy(array, ['key1', 'key2']) //lodash sort by 2 properties
 const sortData3 = array.sort(compareValues) //functional
@@ -61,3 +60,17 @@ const customerNames = () => {
   })
   return result
 };
+
+//Remove Duplicates
+const uniqueArr = (arr) => {
+  return [...new Set(arr)]
+};
+
+const uniqueArr2 = (arr) => {
+  let result = []
+  arr.forEach((item) => {
+    if (!result.includes(item)) {
+      result.push(item)
+    }
+  })
+}

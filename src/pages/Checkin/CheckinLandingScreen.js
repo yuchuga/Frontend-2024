@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container } from 'reactstrap';
-import { MASKNAME_REGEX, MASKEMAIL_REGEX, APP_STORE, PLAY_STORE } from 'utils/constants';
+import { MASKNAME_REGEX, MASKEMAIL_REGEX, APP_STORE, PLAY_STORE } from '../../utils/constants';
 import styled from 'styled-components';
 import Icon from '../../assets/avatar/plan-avatar-checkin.png';
 import Icon2 from '../../assets/banner/checkin-banner.png';

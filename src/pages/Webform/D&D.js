@@ -6,11 +6,11 @@ import { UncontrolledTooltip } from 'reactstrap';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
-import { getWebFormGroup, getPeopleInWebForm } from '../../helpers/apiHelper';
+import { getWebFormGroup, getPeopleInWebForm } from '../.././helpers/apiHelper';
 import { parseQueryString } from '../../utils';
 import styled from 'styled-components';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
-import AccessDenied from 'components/Common/accessDenied';
+// import AccessDenied from 'components/Common/accessDenied';
 import { BANK_ID, BANKID_REGEX, DRESS, CATEGORY_DND, GROUP_ENTRY, GROUP_NAME, GROUP_NAME2, GROUP_NOTE, GROUP_NAME_REGEX, MENU, OTHER_OPTION,
         SCB_DND_TERMS, INDIVIDUAL_FUSION, INDIVIDUAL_FUSION_VEGETARIAN } from '../../utils/constants';
 
@@ -229,7 +229,7 @@ const DnD = (props) => {
       if (matchGroupName() && selectGroup.value === OTHER_OPTION) {
         setIsMatch(true)
       } else if (menuChoice === undefined) {
-        setMenuDropdownEror(true)
+        setMenuDropdownError(true)
       } else {
         setIsMatch(false)
         postMessage(output)

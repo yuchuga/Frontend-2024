@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
-import { PHONE_REGEX, MARKETING_TEXT, TERMS } from 'utils/constants';
+import { PHONE_REGEX, MARKETING_TEXT, TERMS } from '../../utils/constants';
 import platform from 'platform';
 import styled from 'styled-components';
 

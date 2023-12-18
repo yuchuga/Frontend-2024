@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container } from 'reactstrap';
 import styled from 'styled-components';
-import Icon from '../../assets/images/avatar/plan-avatar-checkin.png';
+import Icon from '../../assets/avatar/plan-avatar-checkin.png';
 
 const Upcoming = () => {
   return (

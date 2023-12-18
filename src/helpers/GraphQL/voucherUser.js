@@ -1,5 +1,5 @@
 import { API, graphqlOperation } from 'aws-amplify'
-import { listVoucherUsers, voucherUserByDealId } from '../../graphql/queries'
+// import { listVoucherUsers, voucherUserByDealId } from '../../graphql/queries'
 import amplitude from 'amplitude-js';
 
 export const getVoucherUserByCode = async (code) => {
@@ -12,8 +12,8 @@ export const getVoucherUserByCode = async (code) => {
         }
       }
     }
-  const result = await API.graphql(graphqlOperation(listVoucherUsers, params))
-  return result.data.listVoucherUsers
+  // const result = await API.graphql(graphqlOperation(listVoucherUsers, params))
+  // return result.data.listVoucherUsers
   } catch (e) {
     amplitude.getInstance().logEventWithGroups('Error - getVoucherUserByCode', { 'details': e })
     console.error('Error on getVoucherUserByCode', e)
@@ -34,15 +34,15 @@ export const getRedeemVouchersByDeal = async (dealId) => {
   }
   //get all deals belong to merchant
   do {
-    const dealsResult = await API.graphql(graphqlOperation(voucherUserByDealId, params))
-    const items = dealsResult.data.voucherUserByDealId.items
+    // const dealsResult = await API.graphql(graphqlOperation(voucherUserByDealId, params))
+    // const items = dealsResult.data.voucherUserByDealId.items
       
-    if (items.length > 0) {
-      deals = deals.concat(items)
-    }
+    // if (items.length > 0) {
+    //   deals = deals.concat(items)
+    // }
       
-    const nextToken = dealsResult.data.voucherUserByDealId.nextToken
-    params.nextToken = nextToken
+    // const nextToken = dealsResult.data.voucherUserByDealId.nextToken
+    // params.nextToken = nextToken
   } while (params.nextToken)
   return deals;
 }

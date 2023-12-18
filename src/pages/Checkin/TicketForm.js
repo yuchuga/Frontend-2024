@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from '@hookform/error-message';
 import { API } from 'aws-amplify';
-import { MARKETING_TEXT, TERMS, TICKET_API } from 'utils/constants';
+import { MARKETING_TEXT, TERMS, TICKET_API } from '../../utils/constants';
 import platform from 'platform';
 import styled from 'styled-components';
 

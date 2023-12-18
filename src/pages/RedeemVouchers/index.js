@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Container, Spinner } from 'reactstrap';
-import { QrReader } from 'react-qr-reader';
-import { remoteConfig } from 'utils';
-import { QRSCAN_TEXT } from 'utils/constants';
 import { fromUnixTime, format, parseISO } from 'date-fns';
 import styled from 'styled-components';
-import Icon from '../../../assets/images/avatar/plan-avatar-redemption.png';
-//import Breadcrumb
-import { setBreadcrumbItems, setAlert } from "../../../store/actions";
+import Icon from '../../assets/avatar/plan-avatar-checkin.png';
 //custom components
-import RedeemModal from './Components/RedeemModal';
-import RedeemLandingModal from './Components/RedeemLandingModal';
-import ScanPrompt from './Components/ScanPrompt';
-import { getVoucherById } from '../../../helpers/GraphQL/voucherMaster';
-import { getDealById } from '../../../helpers/GraphQL/promotions';
-import { getTransactionById } from '../../../helpers/GraphQL/transactions';
-import { getVoucherUserByMasterId } from '../../../helpers/GraphQL/voucherUser';
-import { getWebFormByUserId } from '../../../helpers/GraphQL/webForm';
-import { getCheckinTicketByMasterId } from '../../../helpers/GraphQL/checkinTicket';
-import { getScanHistoryByVoucherId } from '../../../helpers/GraphQL/scanHistory';
-import { WEBFORM_ID } from '../../../utils/constants';
+import RedeemModal from './RedeemModal';
+import RedeemLandingModal from './RedeemLandingModal';
+import ScanPrompt from './ScanPrompt';
+import { getDealById } from '../.././helpers/GraphQL/promotions';
+import { getTransactionById } from '../.././helpers/GraphQL/transactions';
+import { getWebFormByUserId } from '../.././helpers/GraphQL/webForm';
+import { getCheckinTicketByMasterId } from '../.././helpers/GraphQL/checkinTicket';
+import { getScanHistoryByVoucherId } from '../.././helpers/GraphQL/scanHistory';
+import { WEBFORM_ID } from '../../utils/constants';
+// import { QrReader } from 'react-qr-reader';
+// import { remoteConfig } from 'utils';
+// import { QRSCAN_TEXT } from 'utils/constants';
+// import { setBreadcrumbItems, setAlert } from "../../../store/actions";
+// import { getVoucherById } from '../../helpers/GraphQL/voucherMaster';
+// import { getVoucherUserByMasterId } from '../../helpers/GraphQL/voucherUser';
 
 const RedeemVouchers = (props) => {
   const rearCamera = {facingMode: 'environment'}
@@ -49,27 +48,27 @@ const RedeemVouchers = (props) => {
 
   useEffect(() => {
     if (!user) {
-      dispatch(setAlert('Error loading this page. Please contact Administrator', 'danger'))
+      // dispatch(setAlert('Error loading this page. Please contact Administrator', 'danger'))
     } else {
-      dispatch(setAlert(''))
+      // dispatch(setAlert(''))
     }
-    dispatch(setBreadcrumbItems('Redemption', breadcrumbItems))
-    showScanning()
+    // dispatch(setBreadcrumbItems('Redemption', breadcrumbItems))
+    // showScanning()
     // console.log(selectedMerchant.merchant_id)
   }, [selectedMerchant])
 
   //check Firebase remote config for merchantId
   const showScanning = async () => {
     let merchantId = selectedMerchant.merchant_id
-    let arrConfig = await remoteConfig("redemptionScanning")
-    let parseConfig = JSON.parse(arrConfig._value)
+    // let arrConfig = await remoteConfig("redemptionScanning")
+    // let parseConfig = JSON.parse(arrConfig._value)
 
-    const findRes = parseConfig.find(e => e.merchantId === merchantId)
-    if (findRes?.enableScanning) {
-      setEnableScan(false)
-    } else {
-      setEnableScan(true)
-    }  
+    // const findRes = parseConfig.find(e => e.merchantId === merchantId)
+    // if (findRes?.enableScanning) {
+    //   setEnableScan(false)
+    // } else {
+    //   setEnableScan(true)
+    // }  
   }
 
   const fetchCreateScan = async (data) => {
@@ -86,7 +85,7 @@ const RedeemVouchers = (props) => {
         const masterId = JSON.parse(data.text)['voucherUser-masterId'] 
         
         //Query by masterId in VoucherUser table
-        voucherUser = await getVoucherUserByMasterId(masterId)
+        // voucherUser = await getVoucherUserByMasterId(masterId)
         
         if (voucherUser.length > 0) {
           //Query dealId in DealMaster table
@@ -164,21 +163,21 @@ const RedeemVouchers = (props) => {
         return true
       }
 
-      const result = await getVoucherById(masterId)
-      if (!result) {
-        setSuccessResult({...fetchResult, errorMsg: 'This code is not found'})
-        setShowRedeemModal(false)
-        setShowResultModal(true)
-        return true
-      }
+      // const result = await getVoucherById(masterId)
+      // if (!result) {
+      //   setSuccessResult({...fetchResult, errorMsg: 'This code is not found'})
+      //   setShowRedeemModal(false)
+      //   setShowResultModal(true)
+      //   return true
+      // }
 
-      //check if valid is false or no valid attribute from VoucherMaster table
-      if (result.valid === '0' || !result.valid) { 
-        setSuccessResult({...fetchResult, errorMsg: 'This code has been invalidated'})
-        setShowRedeemModal(false)
-        setShowResultModal(true)
-        return true
-      }
+      // //check if valid is false or no valid attribute from VoucherMaster table
+      // if (result.valid === '0' || !result.valid) { 
+      //   setSuccessResult({...fetchResult, errorMsg: 'This code has been invalidated'})
+      //   setShowRedeemModal(false)
+      //   setShowResultModal(true)
+      //   return true
+      // }
 
       const scanHistory = await getScanHistoryByVoucherId(masterId);
       if (scanHistory.length > 0) {
@@ -241,19 +240,19 @@ const RedeemVouchers = (props) => {
               {scanning ? <SpinnerIcon /> :
                 scan ?
                   <QrWrap>
-                    <QrReader 
+                    {/* <QrReader 
                       constraints={selectCamera}
                       onResult={handleScan}
                       scanDelay={300}
                       videoStyle={video}
                       containerStyle={videoContainer}
-                    />
+                    /> */}
                   </QrWrap>
                   :
                   <RedeemWrap>
                     <RedeemIcon src={Icon} />
                     <H1>Permission access required</H1>
-                    <P>{QRSCAN_TEXT}</P>
+                    {/* <P>{QRSCAN_TEXT}</P> */}
                     <RedeemButton onClick={toggleScan}>Turn On Camera</RedeemButton>
                   </RedeemWrap>
               }

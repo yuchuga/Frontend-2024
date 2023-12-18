@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useSelector } from "react-redux";
 import { Button, Modal, CloseButton } from 'react-bootstrap';
 import styled from 'styled-components';
-import Icon from '../../../../assets/images/avatar/plan-avatar-redeem.png';
+import Icon from '../../assets/avatar/plan-avatar-checkin.png';
 // custom components
-import { createScanHistoryEntries, getScanHistoryByVoucherId, updateScanHistoryEntries } from '../../../../helpers/GraphQL/scanHistory';
+import { createScanHistoryEntries, getScanHistoryByVoucherId, updateScanHistoryEntries } from '../../helpers/GraphQL/scanHistory';
 
 const RedeemModal = (props) => { //destructure props using ({data, scanData, show}) 
 

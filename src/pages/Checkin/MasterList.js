@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Spinner } from 'reactstrap';
 import { API } from 'aws-amplify';
-import { MASKNAME_REGEX, TICKET_API } from 'utils/constants';
+import { MASKNAME_REGEX, TICKET_API } from '../../utils/constants';
 import { parseQueryString } from '../../utils';
 import styled from 'styled-components';
 import { IoIosArrowDroprightCircle, IoIosCheckbox } from 'react-icons/io';

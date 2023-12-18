@@ -1,15 +1,15 @@
 import { API, graphqlOperation } from 'aws-amplify'
-import { dealByMerchantId, getDealMaster, dealByMerchantUniqueId } from '../../graphql/queries'
-import { createDealMaster, updateDealMaster } from '../../graphql/mutations'
-import { invalidateCloudFrontCache  } from '../../helpers/apiHelper'
+// import { dealByMerchantId, getDealMaster, dealByMerchantUniqueId } from '../../graphql/queries'
+// import { createDealMaster, updateDealMaster } from '../../graphql/mutations'
+// import { invalidateCloudFrontCache  } from '../../helpers/apiHelper'
 import amplitude from 'amplitude-js';
 
 const indices = ['geohashlong', 'geohashshort', 'rank_updated', 'deal_handler', 'cc_buddy_category', 'country', 'is_online', 'bank', 'aggregator', 'google_placeid', "isPinned"]
 
 export const getPromotionInfo = async (merchantId) => {
     try {
-        const result = await API.graphql(graphqlOperation(getDealMaster, { merchant_id: merchantId }))
-        return result.data.getDealMaster
+        // const result = await API.graphql(graphqlOperation(getDealMaster, { merchant_id: merchantId }))
+        // return result.data.getDealMaster
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getPromotionInfo', { 'details': e })
         console.error('error getPromotionInfo ', e)
@@ -49,13 +49,13 @@ export const listPromotionsByMerchantId = async (merchantId, {onlyPurchasable, f
 
         //get all merchant outlets 
         do {
-            const promotions = await API.graphql(graphqlOperation(dealByMerchantId, params))
-            const items = promotions.data.dealByMerchantId.items
-            if (items.length > 0) {
-                result = result.concat(items)
-            }
-            const nextToken = promotions.data.dealByMerchantId.nextToken
-            params.nextToken = nextToken
+            // const promotions = await API.graphql(graphqlOperation(dealByMerchantId, params))
+            // const items = promotions.data.dealByMerchantId.items
+            // if (items.length > 0) {
+            //     result = result.concat(items)
+            // }
+            // const nextToken = promotions.data.dealByMerchantId.nextToken
+            // params.nextToken = nextToken
         } while (params.nextToken)
         
         // default sort by promotion title
@@ -89,14 +89,14 @@ export const update = async (item, options) => {
         delete _item.outlets
         delete _item.tags
 
-        const result = await API.graphql(graphqlOperation(updateDealMaster, { input: _item }))
+        // const result = await API.graphql(graphqlOperation(updateDealMaster, { input: _item }))
         
         if (options && options.invalidateCloudFrontCache) {
             options.invalidateCloudFrontCache.forEach((key) => {
-                invalidateCloudFrontCache(_item[key])
+                // invalidateCloudFrontCache(_item[key])
             })
         }
-        return result.data.updateDealMaster
+        // return result.data.updateDealMaster
     } catch (error) {
         amplitude.getInstance().logEventWithGroups('Error - updateDealMaster', { 'details': error })
         console.error('error update promotion ',error)
@@ -118,8 +118,8 @@ export const create = async (item) => {
         delete _item.outlets
         delete _item.tags
 
-        const result = await API.graphql(graphqlOperation(createDealMaster, { input: _item }))
-        return result.data.createDealMaster
+        // const result = await API.graphql(graphqlOperation(createDealMaster, { input: _item }))
+        // return result.data.createDealMaster
     } catch (error) {
         amplitude.getInstance().logEventWithGroups('Error - createDealMaster', { 'details': error })
         console.error('error create promotion ', error)
@@ -140,8 +140,8 @@ export const getPromoByMerchantUniqueId =  async (merchantUniqueId, filter) => {
         if (!filter) delete params.filter        
         // console.log('getPromoByMerchantUniqueId ', params)
 
-        const result = await API.graphql(graphqlOperation(dealByMerchantUniqueId, params))
-        return result.data.dealByMerchantUniqueId
+        // const result = await API.graphql(graphqlOperation(dealByMerchantUniqueId, params))
+        // return result.data.dealByMerchantUniqueId
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getPromoByMerchantUniqueId', { 'details': e})
         console.error('error getPromoByMerchantUniqueId ', e)
@@ -160,8 +160,8 @@ export const getSalesSummaryDealsList = async (merchantId) => {
 
 export const getDealById = async (pk) => {
     try {
-        const result = await API.graphql(graphqlOperation(getDealMaster, { pk }))
-        return result.data.getDealMaster
+        // const result = await API.graphql(graphqlOperation(getDealMaster, { pk }))
+        // return result.data.getDealMaster
     } catch (e) {
         amplitude.getInstance().logEventWithGroups('Error - getDealMasterData', { 'details': e })
         console.error('Error in getDealMasterData', e)

@@ -1,13 +1,12 @@
 import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import Contacts from '../pages/Webform/Contacts';
-import DnD from "../pages/Webform/D&D";
-import Upcoming from '../pages/Webform/Upcoming';
-import MasterList from '../pages/Checkin/MasterList';
-import TicketForm from '../pages/Checkin/TicketForm';
-import CheckinLandingScreen from '../pages/Checkin/CheckinLandingScreen';
-import RedeemVouchers from "../pages/RedeemVouchers";
-import ScanHistory from "../pages/RedeemVouchers";
+import Contacts from './pages/Webform/Contacts';
+import DnD from "./pages/Webform/D&D";
+import Upcoming from './pages/Webform/Upcoming';
+import MasterList from './pages/Checkin/MasterList';
+import TicketForm from './pages/Checkin/TicketForm';
+import CheckinLandingScreen from './pages/Checkin/CheckinLandingScreen';
+import ScanHistory from "./pages/RedeemVouchers";
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Route path="/checkin/success" element={<CheckinLandingScreen />}/>
         <Route path="/checkin/masterlist/:transactionId" element={<MasterList />}/> 
         <Route path="/checkin/:masterId" element={<TicketForm />}/> 
-        <Route path="/redeem" element={<RedeemVouchers />}/>
         <Route path="/redeem/history" element={<ScanHistory />}/>
       </Routes>
     </Router>
