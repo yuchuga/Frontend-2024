@@ -7,6 +7,7 @@ import MasterList from './pages/Checkin/MasterList';
 import TicketForm from './pages/Checkin/TicketForm';
 import CheckinLandingScreen from './pages/Checkin/CheckinLandingScreen';
 import ScanHistory from "./pages/RedeemVouchers";
+import Debounce from "./pages/Debounce";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/checkin/masterlist/:transactionId" element={<MasterList />}/> 
         <Route path="/checkin/:masterId" element={<TicketForm />}/> 
         <Route path="/redeem/history" element={<ScanHistory />}/>
+        <Route path="/debounce" element={<Debounce />}/>
       </Routes>
     </Router>
   );
