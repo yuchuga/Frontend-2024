@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import { jsonToCSV, readString } from 'react-papaparse'
+
 
 // convert JSON to CSV
 const exportCSV = (data, filename) => {
@@ -17,7 +19,7 @@ const exportCSV = (data, filename) => {
 };
 
 const handleExport = () => {
-  const newConfigs = configs.map(({ key, levelSpreads, bidSpreads, askSpreads, minimumSpreads }) => {
+  const newConfigs = configs.map(({ bidSpreads, askSpreads, minimumSpreads }) => {
     return {
       ...item,
       bidMarkup: bidSpreads,
@@ -32,7 +34,6 @@ const handleExport = () => {
   exportCSV(csvData, `FwdSpread.csv`)
 };
 
-const rows = useRef()
 
 const handleImport = (file) => {
   const read = new FileReader()
@@ -43,6 +44,7 @@ const handleImport = (file) => {
 };
 
 const importCSV = (csvString) => {
+  const csvKeys = {}
   const configOptions = {
     header: true, 
     dynamicTyping: true,
@@ -54,7 +56,7 @@ const importCSV = (csvString) => {
   const parseData = parseResults.data
   const parseError = parseResults.errors
   const parseFields = parseResults.meta.fields
-  const rowData = rows.current
+  const rowData = [ {obj1}, {obj2} ]
 
   if (parseError && parseError.length > 0) {
     notifyError(`Import failed - ${parseError[0].message}!`)
@@ -71,9 +73,15 @@ const importCSV = (csvString) => {
     return
   };
 
+  parseData.forEach((item) => _.merge(csvKeys, item)) // _.merge(destination, source), return last object
+  if (Object.keys(csvKeys).length !== 10) {
+    notifyError('Import failed - Incorrect fields found')
+    return
+  };
+
   const csvData = parseData.map((item) => flat.unflatten(item))
   const viewHeaders = validateEachKey(rowData, parseFields)
-  const equalKeys = parseFields.every(item => viewHeaders.includes(item))
+  const equalKeys = parseFields.every((item) => viewHeaders.includes(item)) //test every item in parseFields 
   
   if (equalKeys) {
     createImport(csvData)
@@ -94,7 +102,6 @@ const createImport = async (data) => {
   await api.createConfig(data, type)
     .then(() => {
       notifySuccess('Import successful')
-      reloadAll()
     })
     .catch((error) => {
       console.error(error)
