@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { jsonToCSV, readString } from 'react-papaparse'
-
+import { useNavigate } from 'react-router'
 
 // convert JSON to CSV
 const exportCSV = (data, filename) => {
@@ -102,6 +102,7 @@ const createImport = async (data) => {
   await api.createConfig(data, type)
     .then(() => {
       notifySuccess('Import successful')
+      handleRefresh()
     })
     .catch((error) => {
       console.error(error)
@@ -126,4 +127,14 @@ const handleHeaders = () => {
   const headers = Object.keys(jsonData[maxKeysIndex])
   console.log('Headers', headers) //ensure array of strings format
   return headers
+};
+
+
+const navigate = useNavigate()
+
+const handleRefresh = () => {
+  window.location.reload() //javascript
+  navigate(0) //react-router-dom
+  Router.refresh() //next.js
+  // navigate(-1) //go back in browser
 };
