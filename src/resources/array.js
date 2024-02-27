@@ -1,10 +1,9 @@
 //function compare strings
 compareValues = (a, b) => {
   return a.bookCode.localeCompare(b.bookCode) //string comparison
-}
+};
 return (a.bookCode < b.bookCode) ? -1 : (a.bookCode > b.bookCode) ? 1 : 0 //number comparison
-
-//function compare values
+//compare number 
 return a.id - b.id //ascending
 return b.id - a.id //descending
 
@@ -39,7 +38,7 @@ const newUsers = users.map(obj1 => {
 })
 
 const filterCurrencies = (obj) => {
-  const { allowCurrencies, ...item } = obj // destructure keys from object
+  const { allowCurrencies, ...item } = obj // destructure key 'allowCurrencies' from object
   const filterCurrency = allowCurrencies.filter(item => item !== null)
   return {
     allowCurrencies: filterCurrency,
