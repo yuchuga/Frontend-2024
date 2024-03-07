@@ -3,6 +3,7 @@ import Select from 'react-select'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 import * as Constants from '../../utils/constants'
+import { useSearchParams } from 'react-router-dom'
 import { Button, Container, Form } from 'react-bootstrap'
 import { AiOutlineExclamationCircle } from 'react-icons/ai'
 import { UncontrolledTooltip } from 'reactstrap'
@@ -10,11 +11,11 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ErrorMessage } from '@hookform/error-message'
 import { getWebFormGroup, getPeopleInWebForm } from '../.././helpers/apiHelper'
-import { parseQueryString } from '../../utils'
 
-const DnD = (props) => {
-  
-  const search = props.location.search;
+const DnD = () => {
+  const [searchParams] = useSearchParams()
+  const userId = searchParams.get('userId')
+  console.log('userId', userId)
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -56,7 +57,6 @@ const DnD = (props) => {
   const [selectGroup, setSelectGroup] = useState('')
   const [selectMenu, setSelectMenu] = useState('')
   const [, setUserId] = useState('')
-  const [isAccessDenied, setAccessDenied] = useState(null)
   const [groupData, setGroupData] = useState([])
   const [peopleInGroup, setPeopleInGroup] =  useState([])
   const [arrGroup, setArrGroup] = useState([])
@@ -70,18 +70,16 @@ const DnD = (props) => {
   const [, setIsIndividual] = useState(false)
 
   useEffect(() => {
-    getGroup() 
+    // getGroup() 
     getQuery()  
-  }, []); // eslint-disable-line
+  }, [userId]); 
 
   const getQuery = () => {
-    const queryString = parseQueryString(search)
-    setValue('email', queryString.email)
-    setUserId('userId', queryString.userId)
+    setUserId('userId', userId)
   }
   
   const getGroup = async () => {
-    let getGroup = await getWebFormGroup(Constants.CATEGORY_DND, search)
+    let getGroup = await getWebFormGroup(Constants.CATEGORY_DND, userId)
     let _arrGroup = []
     if (!getGroup.error) {
       let parseGroup = JSON.parse(getGroup.body)
@@ -110,14 +108,11 @@ const DnD = (props) => {
         }
       })
       setGroupData(groupData)
-      setAccessDenied(false)
-    } else {
-      setAccessDenied(true)
     }
-  }
+  };
 
   const getPeopleInGroup = async (group) => {
-    let getPeople = await getPeopleInWebForm('0002', search)
+    let getPeople = await getPeopleInWebForm('0002', userId)
 
     if (!getPeople.error) {
       let parsePeople = JSON.parse(getPeople.body)
@@ -131,10 +126,7 @@ const DnD = (props) => {
 
       setSelectMenu(menu)
       setOption(group, dress)
-      setAccessDenied(false)
       getCreator(group)
-    } else {
-      setAccessDenied(true)
     }
   }
 
@@ -151,7 +143,6 @@ const DnD = (props) => {
     } else {
       setShowAll(false)
       setShowBoth(true)
-      getPeopleInGroup(item.value)
       setValue('groupName', item.value)
       setDisableField(true)
     } 
@@ -196,8 +187,7 @@ const DnD = (props) => {
       setValue('dress', dress)
       setIsIndividual(false)
     }
-    
-  }
+  };
 
   const terms = () => {
     window.open(Constants.SCB_DND_TERMS, '_blank').focus() 
@@ -265,232 +255,155 @@ const DnD = (props) => {
 
   return ( 
     <FormContainer fluid>
-      {isAccessDenied === null ? <></> :
-        (isAccessDenied ? <AccessDenied screen="D&D" showBackToDashboard={false} /> : 
-        <FormWrap onSubmit={handleSubmit(onSubmit, onError)} onBlur={(e) => removeSpecialChar(e)}>
-          <H2>Please fill in your contact info</H2>
+      <FormWrap onSubmit={handleSubmit(onSubmit, onError)} onBlur={(e) => removeSpecialChar(e)}>
+        <H2>Please fill in your contact info</H2>
 
-          <FormField>
-            <Form.Label>Email Address<sup>*</sup><span>(Tickets sent to this email)</span></Form.Label>
-            <Form.Control 
-              readOnly
-              type="text" 
-              name="email"
-              placeholder="Input your email address" 
-              className={errors.email && "error"}
-              {...register("email")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="email"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormField>
+        <FormField>
+          <Form.Label>Email Address<sup>*</sup></Form.Label>
+          <Form.Control 
+            type="text" 
+            name="email"
+            placeholder="Input your email address" 
+            className={errors.email && "error"}
+            {...register("email")}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="email"
+            render={({ message }) => <P>{message}</P>}
+          />
+        </FormField>
 
-          <FormField>
-            <Form.Label>Bank ID<sup>*</sup>
-              <ToolTipIcon id='first' />
-              <UncontrolledTooltip
-                placement='right'
-                target='first'
-              >
-              <p style={{ textAlign: 'left', marginBottom: 0 }}>{BANK_ID}</p>
-              </UncontrolledTooltip>
-            </Form.Label>
-            <Form.Control  
-              type="text" 
-              name="bankId"
-              placeholder="Input your 7-digit bank ID" 
-              className={errors.bankId && "error"}
-              {...register("bankId")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="bankId"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormField>
-
-          <FormField>
-            <Form.Label>Group Name<sup>*</sup>
-              <ToolTipIcon id='second' />
-              <UncontrolledTooltip
-                placement='right'
-                target='second'
-              >
-              <p style={{ textAlign: 'left', marginBottom: 0 }}>
-                {GROUP_NAME}
-                <br/>
-                {GROUP_NAME2}
-              </p>
-              </UncontrolledTooltip>
-            </Form.Label>
-          
-            <Controller
-              name='selectGroupName' 
-              control={control}
-              render={({ ref }) => (
-                <Select
-                  isSearchable
-                  inputRef={ref}
-                  value={selectGroup} 
-                  options={groupData}
-                  placeholder='Select an option'
-                  onChange={handleGroupChange}
-                />
-              )}
-            />
-            {groupNameDropdownError && 
-            <P>Please select group name</P> }
-            <ErrorMessage
-              errors={errors}
-              name="selectGroupName"
-              render={({ message }) => <P>{message}</P>}
-            />
-            {!showAll && selectGroup &&
-              (creator ?
-              <GroupP>Only {peopleInGroup.length} people are in this group now. You have to stick to the option selected by {creator}, the original creator for this group</GroupP>
-              :
-              <GroupP>{GROUP_NOTE}</GroupP>
-              )
-            }
-          </FormField>
-
-          {showAll &&
-          <>
-          <FormField>
-            <Form.Label>Enter Group Name<sup>*</sup>
-              <ToolTipIcon id='third' />
-              <UncontrolledTooltip
-                placement='right'
-                target='third'
-              >
-              <p style={{ textAlign: 'left', marginBottom: 0 }}>{GROUP_ENTRY}</p>
-              </UncontrolledTooltip>
-            </Form.Label>
-            <Form.Control  
-              type="text" 
-              name="groupName"
-              placeholder="Input your group name" 
-              className={errors.groupName && "error"}
-              {...register("groupName")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="groupName"
-              render={({ message }) => <P>{message}</P>}
-            />
-            {isMatch && 
-              <P>
-                Matching group name detected: {getValues('groupName').toUpperCase()}.Please submit a unique name or select from the above field.
-              </P>
-            }
-          </FormField>
-          
-          <FormField>
-            <Form.Label>Menu Choice<sup>*</sup>
-            {selectGroup.value !== OTHER_OPTION  && 
-              <span>
-                <ToolTipIcon id='fourth' />
-                <UncontrolledTooltip
-                  placement='right'
-                  target='fourth'
-                >
-                {MENU}
-                </UncontrolledTooltip>
-              </span>}
-            </Form.Label>
-            <Controller
-              name='menu' 
-              control={control}
-              render={({ ref }) => (
-                <Select
-                  isDisabled={disableField}
-                  isSearchable
-                  inputRef={ref}
-                  value={selectMenu}
-                  options={menuData}
-                  placeholder='Select an option'
-                  onChange={handleMenuChange}
-                />
-              )}
-            />
-            {menuDropdownError && 
-            <P>Please select menu</P> }
-            <ErrorMessage
-              errors={errors}
-              name="menu"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormField>
-
-          <FormFieldRadio>
-            <Form.Label>Register for Best Dressed Table?<sup>*</sup>
-              <ToolTipIcon id='tooltip' />
-              <UncontrolledTooltip
-                placement='right'
-                target='tooltip'
-              >
-              <p style={{ textAlign: 'left', marginBottom: 0 }}>{DRESS}</p>
-              </UncontrolledTooltip>
-            </Form.Label><br />
-            <Form.Check
-              disabled={disableField}
-              inline
-              name="dress"
-              type="radio" 
-              label="Yes"
-              value="1"
-              {...register("dress")}
-            />
-            <Form.Check
-              disabled={disableField}
-              inline
-              name="dress"
-              type="radio" 
-              label="No"
-              value="0"
-              style={{marginLeft: 120}}
-              {...register("dress")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="dress"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormFieldRadio>
-          </>}
-
-          {showBoth && 
-          <>
-          <FormField>
-          <Form.Label>Menu Choice<sup>*</sup>
-          {selectGroup.value !== OTHER_OPTION && 
-          <span>
-            <ToolTipIcon id='fourth' />
+        <FormField>
+          <Form.Label>Bank ID<sup>*</sup>
+            <ToolTipIcon id='first' />
             <UncontrolledTooltip
               placement='right'
-              target='fourth'
+              target='first'
             >
-            <p style={{ textAlign:'left', marginBottom: 0 }}>{MENU}</p>
+            <p style={{ textAlign: 'left', marginBottom: 0 }}>{Constants.BANK_ID}</p>
             </UncontrolledTooltip>
+          </Form.Label>
+          <Form.Control  
+            type="text" 
+            name="bankId"
+            placeholder="Input your 7-digit bank ID" 
+            className={errors.bankId && "error"}
+            {...register("bankId")}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="bankId"
+            render={({ message }) => <P>{message}</P>}
+          />
+        </FormField>
+
+        <FormField>
+          <Form.Label>Group Name<sup>*</sup>
+            <ToolTipIcon id='second' />
+            <UncontrolledTooltip
+              placement='right'
+              target='second'
+            >
+            <p style={{ textAlign: 'left', marginBottom: 0 }}>
+              {Constants.GROUP_NAME}
+              <br/>
+              {Constants.GROUP_NAME2}
+            </p>
+            </UncontrolledTooltip>
+          </Form.Label>
+        
+          <Controller
+            name='selectGroupName' 
+            control={control}
+            render={({ ref }) => (
+              <Select
+                isSearchable
+                inputRef={ref}
+                value={selectGroup} 
+                options={groupData}
+                placeholder='Select an option'
+                onChange={handleGroupChange}
+              />
+            )}
+          />
+          {groupNameDropdownError && 
+          <P>Please select group name</P> }
+          <ErrorMessage
+            errors={errors}
+            name="selectGroupName"
+            render={({ message }) => <P>{message}</P>}
+          />
+          {!showAll && selectGroup &&
+            (creator ?
+            <GroupP>Only {peopleInGroup.length} people are in this group now. You have to stick to the option selected by {creator}, the original creator for this group</GroupP>
+            :
+            <GroupP>{GROUP_NOTE}</GroupP>
+            )
+          }
+        </FormField>
+
+        {showAll &&
+        <>
+        <FormField>
+          <Form.Label>Enter Group Name<sup>*</sup>
+            <ToolTipIcon id='third' />
+            <UncontrolledTooltip
+              placement='right'
+              target='third'
+            >
+            <p style={{ textAlign: 'left', marginBottom: 0 }}>{GROUP_ENTRY}</p>
+            </UncontrolledTooltip>
+          </Form.Label>
+          <Form.Control  
+            type="text" 
+            name="groupName"
+            placeholder="Input your group name" 
+            className={errors.groupName && "error"}
+            {...register("groupName")}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="groupName"
+            render={({ message }) => <P>{message}</P>}
+          />
+          {isMatch && 
+            <P>
+              Matching group name detected: {getValues('groupName').toUpperCase()}.Please submit a unique name or select from the above field.
+            </P>
+          }
+        </FormField>
+        
+        <FormField>
+          <Form.Label>Menu Choice<sup>*</sup>
+          {selectGroup.value !== OTHER_OPTION  && 
+            <span>
+              <ToolTipIcon id='fourth' />
+              <UncontrolledTooltip
+                placement='right'
+                target='fourth'
+              >
+              {MENU}
+              </UncontrolledTooltip>
             </span>}
           </Form.Label>
           <Controller
-              name='menu' 
-              control={control}
-              render={({ ref }) => (
-                <Select
-                  isDisabled={disableField}
-                  isSearchable
-                  inputRef={ref}
-                  value={selectMenu}
-                  options={menuData}
-                  placeholder='Select an option'
-                  onChange={handleMenuChange}
-                />
-              )}
-            />
+            name='menu' 
+            control={control}
+            render={({ ref }) => (
+              <Select
+                isDisabled={disableField}
+                isSearchable
+                inputRef={ref}
+                value={selectMenu}
+                options={menuData}
+                placeholder='Select an option'
+                onChange={handleMenuChange}
+              />
+            )}
+          />
+          {menuDropdownError && 
+          <P>Please select menu</P> }
           <ErrorMessage
             errors={errors}
             name="menu"
@@ -502,7 +415,7 @@ const DnD = (props) => {
           <Form.Label>Register for Best Dressed Table?<sup>*</sup>
             <ToolTipIcon id='tooltip' />
             <UncontrolledTooltip
-              placement='bottom'
+              placement='right'
               target='tooltip'
             >
             <p style={{ textAlign: 'left', marginBottom: 0 }}>{DRESS}</p>
@@ -517,13 +430,13 @@ const DnD = (props) => {
             value="1"
             {...register("dress")}
           />
-          <Form.Check 
+          <Form.Check
             disabled={disableField}
             inline
             name="dress"
             type="radio" 
             label="No"
-            value="0" 
+            value="0"
             style={{marginLeft: 120}}
             {...register("dress")}
           />
@@ -535,63 +448,133 @@ const DnD = (props) => {
         </FormFieldRadio>
         </>}
 
-          <FormFieldRadio>
-            <Form.Label>Transportation from CBP?<sup>*</sup></Form.Label><br />
-            <Form.Check
-              inline
-              name="transport"
-              type="radio" 
-              label="Yes"
-              value="1"
-              {...register("transport")}
-            />
-            <Form.Check 
-              inline
-              name="transport"
-              type="radio" 
-              label="No"
-              value="0"
-              style={{marginLeft: 120}}
-              {...register("transport")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="transport"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormFieldRadio>
+        {showBoth && 
+        <>
+        <FormField>
+        <Form.Label>Menu Choice<sup>*</sup>
+        {selectGroup.value !== OTHER_OPTION && 
+        <span>
+          <ToolTipIcon id='fourth' />
+          <UncontrolledTooltip
+            placement='right'
+            target='fourth'
+          >
+          <p style={{ textAlign:'left', marginBottom: 0 }}>{MENU}</p>
+          </UncontrolledTooltip>
+          </span>}
+        </Form.Label>
+        <Controller
+            name='menu' 
+            control={control}
+            render={({ ref }) => (
+              <Select
+                isDisabled={disableField}
+                isSearchable
+                inputRef={ref}
+                value={selectMenu}
+                options={menuData}
+                placeholder='Select an option'
+                onChange={handleMenuChange}
+              />
+            )}
+          />
+        <ErrorMessage
+          errors={errors}
+          name="menu"
+          render={({ message }) => <P>{message}</P>}
+        />
+      </FormField>
 
-          <FormFieldTerms>
-            <Form.Check 
-              name="terms"
-              type="checkbox" 
-              label={(
-                <span>I have read and agree to the Late Cancellation / <br/>No-Show penalties (SG$100) and
-                  <a
-                    onClick={() => terms()} 
-                  ><span> T&Cs</span> of registration<sup>*</sup>
-                  </a>
-                </span>
-              )}
-              {...register("terms")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="terms"
-              render={({ message }) => <P>{message}</P>}
-            />
-          </FormFieldTerms>
-          <FormButton type="submit">Proceed to reserve tickets</FormButton>
-        </FormWrap>
-        )
-      }
+      <FormFieldRadio>
+        <Form.Label>Register for Best Dressed Table?<sup>*</sup>
+          <ToolTipIcon id='tooltip' />
+          <UncontrolledTooltip
+            placement='bottom'
+            target='tooltip'
+          >
+          <p style={{ textAlign: 'left', marginBottom: 0 }}>{DRESS}</p>
+          </UncontrolledTooltip>
+        </Form.Label><br />
+        <Form.Check
+          disabled={disableField}
+          inline
+          name="dress"
+          type="radio" 
+          label="Yes"
+          value="1"
+          {...register("dress")}
+        />
+        <Form.Check 
+          disabled={disableField}
+          inline
+          name="dress"
+          type="radio" 
+          label="No"
+          value="0" 
+          style={{marginLeft: 120}}
+          {...register("dress")}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="dress"
+          render={({ message }) => <P>{message}</P>}
+        />
+      </FormFieldRadio>
+      </>}
+
+        <FormFieldRadio>
+          <Form.Label>Transportation from CBP?<sup>*</sup></Form.Label><br />
+          <Form.Check
+            inline
+            name="transport"
+            type="radio" 
+            label="Yes"
+            value="1"
+            {...register("transport")}
+          />
+          <Form.Check 
+            inline
+            name="transport"
+            type="radio" 
+            label="No"
+            value="0"
+            {...register("transport")}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="transport"
+            render={({ message }) => <P>{message}</P>}
+          />
+        </FormFieldRadio>
+
+        <FormFieldTerms>
+          <Form.Check 
+            name="terms"
+            type="checkbox" 
+            label={(
+              <span>I have read and agree to the Late Cancellation / <br/>No-Show penalties (SG$100) and
+                <a
+                  onClick={() => terms()} 
+                ><span> T&Cs</span> of registration<sup>*</sup>
+                </a>
+              </span>
+            )}
+            {...register("terms")}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="terms"
+            render={({ message }) => <P>{message}</P>}
+          />
+        </FormFieldTerms>
+        <FormButton type="submit">Proceed to reserve tickets</FormButton>
+      </FormWrap>
     </FormContainer>
   );
 }
 
 const FormContainer = styled(Container)`
   display: flex;
-  position: absolute; 
   justify-content: center;
   background: white;
   min-height: 100%; 
@@ -603,10 +586,7 @@ const FormContainer = styled(Container)`
 const FormWrap = styled(Form)`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  position: absolute; 
-  background: #fff;
-  color: #000;
+  justify-content: center; 
   width: 27.5rem;
   padding: 1.875rem;
 
@@ -665,6 +645,7 @@ const FormFieldTerms = styled.div`
   }
   label {
     font-weight: 400;
+    font-size: 14px;
   }
   a span {
     color: #722ED1;

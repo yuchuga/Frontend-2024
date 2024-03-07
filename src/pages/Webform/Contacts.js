@@ -172,8 +172,8 @@ const Contacts = () => {
                 <a
                   href="#"
                   onClick={() => terms()} 
-                > T&Cs of Ticket Sales.<sup>*</sup>
-                </a>
+                > T&Cs of Ticket Sales</a><sup>*</sup>
+
               </span>
             )}
             {...register("terms")}
@@ -202,9 +202,8 @@ const Contacts = () => {
 const FormContainer = styled(Container)`
   display: flex;
   justify-content: center;
-  position: absolute;
   background: white;
-  min-height: 100%;
+  height: 100%;
   overflow: scroll;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -213,8 +212,7 @@ const FormContainer = styled(Container)`
 const FormWrap = styled(Form)`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  position: absolute; 
+  justify-content: center; 
   background: #fff;
   color: #000;
   width: 27.5rem;
