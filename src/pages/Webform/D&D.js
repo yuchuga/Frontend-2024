@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
-import { useForm, Controller } from "react-hook-form";
-import { Button, Container, Form } from 'react-bootstrap';
-import { UncontrolledTooltip } from 'reactstrap';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ErrorMessage } from '@hookform/error-message';
-import { getWebFormGroup, getPeopleInWebForm } from '../.././helpers/apiHelper';
-import { parseQueryString } from '../../utils';
-import styled from 'styled-components';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
-// import AccessDenied from 'components/Common/accessDenied';
-import { BANK_ID, BANKID_REGEX, DRESS, CATEGORY_DND, GROUP_ENTRY, GROUP_NAME, GROUP_NAME2, GROUP_NOTE, GROUP_NAME_REGEX, MENU, OTHER_OPTION,
-        SCB_DND_TERMS, INDIVIDUAL_FUSION, INDIVIDUAL_FUSION_VEGETARIAN } from '../../utils/constants';
+import React, { useState, useEffect } from 'react'
+import Select from 'react-select'
+import styled from 'styled-components'
+import * as Yup from 'yup'
+import * as Constants from '../../utils/constants'
+import { Button, Container, Form } from 'react-bootstrap'
+import { AiOutlineExclamationCircle } from 'react-icons/ai'
+import { UncontrolledTooltip } from 'reactstrap'
+import { useForm, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ErrorMessage } from '@hookform/error-message'
+import { getWebFormGroup, getPeopleInWebForm } from '../.././helpers/apiHelper'
+import { parseQueryString } from '../../utils'
 
 const DnD = (props) => {
   
@@ -22,7 +20,7 @@ const DnD = (props) => {
     email: Yup.string()
       .email('Invalid email address'),
     bankId: Yup.string()
-      .matches(BANKID_REGEX, 'Please enter valid bank ID')
+      .matches(Constants.BANKID_REGEX, 'Please enter valid bank ID')
       .required('Required'),
     groupName: Yup.string()
      .required('Required')
@@ -45,7 +43,7 @@ const DnD = (props) => {
     groupName: '',
     dress: '',
     transport: '',
-    terms: false,
+    terms: false
   }
 
   const menuData = [ 
@@ -53,27 +51,28 @@ const DnD = (props) => {
     { value: 'Fusion Vegetarian', label: 'Fusion Vegetarian' }         
   ];
   
-  const [state] = useState(initialValues);
-  const [showAll, setShowAll] = useState(false);
-  const [showBoth, setShowBoth] = useState(false);
-  const [selectGroup, setSelectGroup] = useState('');
-  const [selectMenu, setSelectMenu] = useState('');
-  const [groupData, setGroupData] = useState([]);
-  const [peopleInGroup, setPeopleInGroup] =  useState([]);
-  const [isMatch, setIsMatch] = useState(false);
-  const [disableField, setDisableField] = useState(false);
+  const [state] = useState(initialValues)
+  const [creator, setCreator] = useState('')
+  const [selectGroup, setSelectGroup] = useState('')
+  const [selectMenu, setSelectMenu] = useState('')
+  const [, setUserId] = useState('')
+  const [isAccessDenied, setAccessDenied] = useState(null)
+  const [groupData, setGroupData] = useState([])
+  const [peopleInGroup, setPeopleInGroup] =  useState([])
+  const [arrGroup, setArrGroup] = useState([])
+
+  const [showAll, setShowAll] = useState(false)
+  const [showBoth, setShowBoth] = useState(false)
+  const [isMatch, setIsMatch] = useState(false)
+  const [disableField, setDisableField] = useState(false)
   const [groupNameDropdownError, setGroupNameDropdownError] = useState(false)
   const [menuDropdownError, setMenuDropdownError] = useState(false)
-  const [userId, setUserId] = useState('');
-  const [isAccessDenied, setAccessDenied] = useState(null);
-  const [creator, setCreator] = useState('')
-  const [arrGroup, setArrGroup] = useState([])
-  const [isIndividual, setIsIndividual] = useState(false)
+  const [, setIsIndividual] = useState(false)
 
   useEffect(() => {
-    getGroup();
-    getQuery();
-  }, [])
+    getGroup() 
+    getQuery()  
+  }, []); // eslint-disable-line
 
   const getQuery = () => {
     const queryString = parseQueryString(search)
@@ -82,7 +81,7 @@ const DnD = (props) => {
   }
   
   const getGroup = async () => {
-    let getGroup = await getWebFormGroup(CATEGORY_DND, search)
+    let getGroup = await getWebFormGroup(Constants.CATEGORY_DND, search)
     let _arrGroup = []
     if (!getGroup.error) {
       let parseGroup = JSON.parse(getGroup.body)
@@ -102,7 +101,7 @@ const DnD = (props) => {
       createdGroup.sort((a, b) => a.name.localeCompare(b.name))
       individual.sort((a, b) => a.name.localeCompare(b.name))
       _arrGroup = createdGroup
-      _arrGroup.splice(0, 0, { name: OTHER_OPTION })
+      _arrGroup.splice(0, 0, { name: Constants.OTHER_OPTION })
       _arrGroup.splice(1, 0, ...individual)
       const groupData = _arrGroup.map(item => {
         return {
@@ -142,7 +141,7 @@ const DnD = (props) => {
   const handleGroupChange = (item) => {
     setSelectGroup(item)
 
-    if (item.value === OTHER_OPTION) {
+    if (item.value === Constants.OTHER_OPTION) {
       setShowAll(true)
       setShowBoth(false)
       reset({'groupName': ''})
@@ -185,11 +184,11 @@ const DnD = (props) => {
   }
 
   const setOption = (groupName, dress) => {
-    if (groupName.trim() === INDIVIDUAL_FUSION) {
+    if (groupName.trim() === Constants.INDIVIDUAL_FUSION) {
       setSelectMenu([{ value: 'Fusion', label: 'Fusion' }])
       setValue('dress', '0')
       setIsIndividual(true)
-    } else if (groupName.trim() === INDIVIDUAL_FUSION_VEGETARIAN) {
+    } else if (groupName.trim() === Constants.INDIVIDUAL_FUSION_VEGETARIAN) {
       setSelectMenu([{ value: 'Fusion Vegetarian', label: 'Fusion Vegetarian' }])
       setValue('dress', '0')
       setIsIndividual(true)
@@ -201,32 +200,32 @@ const DnD = (props) => {
   }
 
   const terms = () => {
-    window.open(SCB_DND_TERMS, '_blank').focus() 
-  }
+    window.open(Constants.SCB_DND_TERMS, '_blank').focus() 
+  };
 
   const postMessage = (output) => {
     try { 
-      window.ReactNativeWebView && window.ReactNativeWebView.postMessage(output);
+      window.ReactNativeWebView && window.ReactNativeWebView.postMessage(output)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  }
+  };
 
   const handleBeforeSubmit = async (values) => {
     try {
       values.webFormId = "0002"
       values.terms = values.terms === true ? "1" : "0"
       values.groupName = values.groupName.toLowerCase().trim()
-      values.menu = selectGroup.value === OTHER_OPTION ? selectMenu.value : selectMenu[0].value
-      values.category = CATEGORY_DND
+      values.menu = selectGroup.value === Constants.OTHER_OPTION ? selectMenu.value : selectMenu[0].value
+      values.category = Constants.CATEGORY_DND
 
-      (selectGroup.value === OTHER_OPTION) ? values.creator = '1' : values.creator = '0'
+      (selectGroup.value === Constants.OTHER_OPTION) ? values.creator = '1' : values.creator = '0'
       delete values.selectGroupName
 
       const output = JSON.stringify(values)
       let menuChoice = selectMenu.value || selectMenu[0]?.value
 
-      if (matchGroupName() && selectGroup.value === OTHER_OPTION) {
+      if (matchGroupName() && selectGroup.value === Constants.OTHER_OPTION) {
         setIsMatch(true)
       } else if (menuChoice === undefined) {
         setMenuDropdownError(true)
@@ -237,26 +236,25 @@ const DnD = (props) => {
     } catch (e) {
       console.error(e)
     }
-  }
+  };
   
   const onSubmit = (values) => {
-    handleBeforeSubmit(values);
-  }
+    handleBeforeSubmit(values)
+  };
 
   const onError = (errors) => {
     console.log(errors);
     selectGroup.value ? setGroupNameDropdown(false) : setGroupNameDropdown(true)
     selectMenu.value ? setMenuDropdownError(false) : setMenuDropdownError(true)
-  }
+  };
 
   const removeSpecialChar = (e) => {
-    const {value, name} = e.target
-    
+    const { value, name } = e.target
     if (name === 'groupName') {
-      let str = value.replace({GROUP_NAME_REGEX}, '');
+      let str = value.replace({ GROUP_NAME_REGEX }, '');
       setValue('groupName', str)
     } 
-  }
+  };
 
   const { register, getValues, setValue, handleSubmit, reset, control, formState: { errors } } = useForm ({
     mode: "onTouched", 

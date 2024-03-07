@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
-import { useForm } from "react-hook-form";
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ErrorMessage } from '@hookform/error-message';
-import { PHONE_REGEX, MARKETING_TEXT, TERMS } from '../../utils/constants';
-import platform from 'platform';
-import styled from 'styled-components';
+import React, { useState } from 'react'
+import platform from 'platform'
+import styled from 'styled-components'
+import * as Yup from 'yup'
+import { Button, Container, Form }  from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ErrorMessage } from '@hookform/error-message'
+import { PHONE_REGEX, MARKETING_TEXT, TERMS } from '../../utils/constants'
 
 const Contacts = () => {
 
@@ -39,7 +37,7 @@ const Contacts = () => {
     eventPromoCode: '',
     terms: false,
     marketingConsent: false
-  }
+  };
   
   const [state] = useState(initialValues);
 
@@ -50,38 +48,34 @@ const Contacts = () => {
     if (mobileOS || !mobileOS) { //open in app & ext browser
       window.open(TERMS, '_blank').focus() 
     } 
-  }
+  };
 
-  const postMessage = (output) => {
+  //send message to react-native app from react web
+  const postMessage = (output) => { 
     try {
-      window.ReactNativeWebView && window.ReactNativeWebView.postMessage(output);
+      window.ReactNativeWebView && window.ReactNativeWebView.postMessage(output)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  }
+  };
 
   const onSubmit = (values) => {    
-    // console.log(values);
-
     const output = JSON.stringify(values)
-    // console.log(output);
+    // console.log(output)
+    postMessage(output)
 
-    postMessage(output);
-
-    setTimeout(() => {
-      reset()
-    }, 1000);
-  }
+    setTimeout(() => reset(), 1000)
+  };
 
   const onError = (errors) => {
-    console.log(errors);
-  }
+    console.log(errors)
+  };
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm ({
     mode: "onTouched", 
     reValidateMode: "onChange",
     defaultValues: state,
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema)
   });
 
   return (  
