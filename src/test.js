@@ -35,9 +35,9 @@ const newFields = array.slice(3, array.length).concat(fields)
   Accepts functions as arguments & invoke/call it in outer function
   Run async operations as code runs sequentially in javascript
 **/
-setTimeout(() => { 
-  console.log('Message is shown after 3 seconds')
-}, 3000);
+// setTimeout(() => { 
+//   console.log('Message is shown after 3 seconds')
+// }, 3000);
 
 const circle = {
   radius: 20,
@@ -48,8 +48,8 @@ const circle = {
     return 2*Math.PI*this.radius
   }
 }
-console.log(circle.diameter()) //40
-console.log(circle.perimeter()) //125.6
+// console.log(circle.diameter()) //40
+// console.log(circle.perimeter()) //125.6
 
 /* Find missing number in array size N using arithmetic progression formula n(n+1)/2 */
 const findMissingNumber = (array, length) => {
@@ -69,4 +69,4 @@ const findMissingNumber2 = (array) => {
 
 const array1 = [1, 2, 4, 6, 3, 7, 8]
 const missingNumber = findMissingNumber2(array1)
-console.log('missingNumber', missingNumber) //5
+// console.log('missingNumber', missingNumber) //5
