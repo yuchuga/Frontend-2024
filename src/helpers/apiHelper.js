@@ -2,11 +2,9 @@ import amplitude from 'amplitude-js'
 import { API } from 'aws-amplify'
 import { parseQueryString } from '../utils'
 
-export const getWebFormGroup = async (category, search) => {
+export const getWebFormGroup = async (category, userId) => {
     try {
-      const queryString = parseQueryString(search)
-      const {hash, userId} = queryString
-      const res = await API.get('cardspalcmsv2api', `/webform/${category}/group?hash=${hash}&userId=${userId}`)
+      const res = await API.get('cardspalcmsv2api', `/webform/${category}/group?userId=${userId}`)
       if (res.error) {
         throw JSON.parse(res.error)
       } else {
@@ -19,11 +17,9 @@ export const getWebFormGroup = async (category, search) => {
     }
   }
   
-  export const getPeopleInWebForm = async (webFormId, search) => {
+  export const getPeopleInWebForm = async (webFormId, userId) => {
     try {
-      const queryString = parseQueryString(search)
-      const {hash, userId} = queryString
-      const res = await API.get('cardspalcmsv2api', `/webform/users/${webFormId}?hash=${hash}&userId=${userId}`)
+      const res = await API.get('cardspalcmsv2api', `/webform/users/${webFormId}?userId=${userId}`)
       
       if (res.error) {
         throw JSON.parse(res.error)
