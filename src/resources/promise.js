@@ -4,10 +4,11 @@ const series = async () => {
 }
 
 const parallel = async () => {
-  const usersData = fetch('users')
+  const usersData = fetch('users') 
   const postsData = fetch('posts')
 
   const [users, posts] = await Promise.all(usersData, postsData)
+  const [user, products] = await Promise.allSettled([axios.get('/users'), axios.get('/products')])
   console.log(users)
   console.log(posts)
 }
@@ -49,6 +50,19 @@ export default class User extends React.Component {
   }
 }
 
-/*** Lifecycle Render Flow ***/
+const getProduct = async () => {
+  fetch('https://fakestoreapi.com/products')
+  .then((response) => {
+    if (response.ok) {
+      return response.json()
+    }
+  })
+  .then((data) => {
+    console.log('data', data)
+  })
+  .catch((err) => {
+    console.error(err)
+  })
+};
 
 

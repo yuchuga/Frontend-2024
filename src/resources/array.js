@@ -64,10 +64,13 @@ const customerNames = () => {
   return result
 };
 
-//Remove Duplicates
+/** Remove Duplicates **/
 const uniqueArr = (arr) => {
   return [...new Set(arr)]
 };
+const arr = [10, 3, 26, 7, 9, 3]
+const newArr = uniqueArr(arr)
+// console.log('new', newArr)
 
 const uniqueArr2 = (arr) => {
   let result = []
@@ -78,7 +81,24 @@ const uniqueArr2 = (arr) => {
   })
 }
 
-//return new array of items from start to end excluding end index & append behind array
+/** Reduce Method **/
+const num = [11, 30, 22, 9, 19]
+const sum = num.reduce((acc, curr) => acc + curr)
+// console.log(sum)
+
+/** Filter Method **/
+const filterNum = num.filter(num => num > 20)
+// console.log(filterNum)
+
+/** Find Index Method **/
+const index = arr.findIndex((item) => item > 20)
+if (index >= 0) { //found in arr
+  const temp = arr[index] += 1
+  // console.log(temp)
+}
+
+/** Return new array of items from start to exclude end index & append behind array **/
 const array = [1, 3, 5, 7, 9]
 const fields = array.slice(0, 3)
 const newFields = array.slice(3, array.length).concat(fields)
+// console.log('newFields', newFields)
