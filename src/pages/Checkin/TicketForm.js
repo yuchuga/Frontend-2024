@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useForm } from "react-hook-form";
-import { Button, Container, Form } from 'react-bootstrap';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ErrorMessage } from '@hookform/error-message';
-import { API } from 'aws-amplify';
-import { MARKETING_TEXT, TERMS, TICKET_API } from '../../utils/constants';
-import platform from 'platform';
-import styled from 'styled-components';
+import React, { useState } from 'react'
+import * as Yup from 'yup'
+import platform from 'platform'
+import styled from 'styled-components'
+import { Button, Container, Form } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ErrorMessage } from '@hookform/error-message'
+import { API } from 'aws-amplify'
+import { MARKETING_TEXT, TERMS, TICKET_API } from '../../utils/constants'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 
-const TicketForm = (props) => {
-
+const TicketForm = () => {
   const schema = Yup.object().shape({
     firstName: Yup.string()
       .required('Required'),
@@ -32,11 +32,13 @@ const TicketForm = (props) => {
     marketingConsent: false
   };
 
-  const id = props.match.params.masterId;
-  const ticket = props.location.state;
-  // console.log('FormData', ticket);
+  const params = useParams() //access url query strings
+  const location = useLocation() //access data from parent 
+  const navigate = useNavigate() //navigate to another screen
 
-  const [state] = useState(initialValues);
+  const id = params.masterId
+  const ticket = location.state
+  const [state] = useState(initialValues)
 
   //Post webform data into CheckinTicket table
   const createCheckin = async (values, data) => {
@@ -44,7 +46,7 @@ const TicketForm = (props) => {
       await API.post(TICKET_API, '/checkin/webform', {
         body: {
           masterId: id,
-          dealId: ticket.dealId,
+          dealId: ticket?.dealId,
           firstName: values.firstName,
           lastName: values.lastName,
           email: values.email,
@@ -55,13 +57,13 @@ const TicketForm = (props) => {
       .then(result => {
         if (result && result.body) {
           data = JSON.parse(result.body)
-          console.log('statusCode: 200', data);
+          console.log('statusCode: 200', data)
         }
       })
     } catch (e) {
-      console.log('statusCode: 500', e);
+      console.log('statusCode: 500', e)
     }
-  }
+  };
 
   const fetchCheckin = async (values) => {
     try {
@@ -70,27 +72,25 @@ const TicketForm = (props) => {
       const result = await API.get(TICKET_API, path)
       const data = JSON.parse(result.body) //return array
       const updateData = { ...ticket, checkInData: {...data[0]} } //convert to object
-      // console.log('Result', updateData)
-      
-      const CheckinLandingScreen = {pathname: '/checkin/success', state: updateData}
-      props.history.push(CheckinLandingScreen)
+      // console.log('updateData', updateData)
+      navigate('/checkin/success', {state: { updateData }})
     } catch (e) {
-      console.log('Error in FetchCheckin:', e)
+      console.log('Error in FetchCheckin', e)
     } 
-  }
+  };
 
   const postFormData = async () => {
     const values = getValues()
     await fetchCheckin(values)
-  }
+  };
 
   const postMessage = (output) => {
     try {
       window.ReactNativeWebView && window.ReactNativeWebView.postMessage(output);
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  }
+  };
 
   const terms = () => {
     const OS = platform.os.family
@@ -99,21 +99,21 @@ const TicketForm = (props) => {
     if (mobileOS || !mobileOS) { //open in app
       window.open(TERMS, '_blank').focus() 
     } 
-  }
+  };
 
   const getConfirmationId = () => {
     return id.substring(id.length - 8)
-  }
+  };
 
   const onSubmit = (values) => {
     const output = JSON.stringify(values)
-    postMessage(output);
-    postFormData();
-  }
+    postMessage(output)
+    postFormData()
+  };
 
   const onError = (errors) => {
-    console.error(errors);
-  }
+    console.error(errors)
+  };
   
   const { register, getValues, handleSubmit, formState: { errors } } = useForm({
     mode: "onTouched", 
@@ -125,7 +125,7 @@ const TicketForm = (props) => {
   return (
     <FormContainer fluid>
       <FormWrap onSubmit={handleSubmit(onSubmit, onError)}>
-        <H1>{ticket.dealTitle} - Ticket {ticket.counter}</H1>
+        <H1>{ticket?.dealTitle} - Ticket {ticket?.counter}</H1>
         <Subtitle>
           Confirmation ID: {getConfirmationId(id)}
         </Subtitle>
@@ -216,8 +216,7 @@ const TicketForm = (props) => {
 
 const FormContainer = styled(Container)`
   display: flex;
-  justify-content: center;
-  position: absolute; 
+  justify-content: center; 
   background: white;
   min-height: 100%; 
   overflow-y: auto;
@@ -228,7 +227,6 @@ const FormWrap = styled(Form)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: absolute; 
   background: #fff;
   color: #000;
   width: 27.5rem;

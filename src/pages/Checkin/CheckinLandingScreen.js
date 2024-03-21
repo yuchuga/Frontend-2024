@@ -1,47 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container } from 'reactstrap';
-import { MASKNAME_REGEX, MASKEMAIL_REGEX, APP_STORE, PLAY_STORE } from '../../utils/constants';
-import styled from 'styled-components';
-import Icon from '../../assets/avatar/plan-avatar-checkin.png';
-import Icon2 from '../../assets/banner/checkin-banner.png';
-import platform from 'platform';
+import React, { useState, useEffect } from 'react'
+import platform from 'platform'
+import styled from 'styled-components'
+import Icon from '../../assets/avatar/plan-avatar-checkin.png'
+import Icon2 from '../../assets/banner/checkin-banner.png'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Button, Container } from 'reactstrap'
+import { MASKNAME_REGEX, MASKEMAIL_REGEX, APP_STORE, PLAY_STORE } from '../../utils/constants'
 
-const CheckinLandingScreen = (props) => {
-  const ticket = props.location.state
-  console.log('SuccessData', ticket);
-  
-  const [banner, setBanner] = useState(true);
+const CheckinLandingScreen = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const ticket = location.state
+  const [banner, setBanner] = useState(true)
 
   useEffect(() => {
-    hideBanner();
-  }, [])
+    hideBanner()
+  }, []); //eslint-disable-line
 
   const handleClick = (ticket) => {
-    props.history.push({pathname: `/checkin/${ticket.masterId}`, state: ticket})
-  }
+    navigate(`/checkin/${ticket.masterId}`, {state: { ticket }})
+  };
 
   const getConfirmationId = (ticket) => {
-    let id = ticket.masterId
-    return id.substring(id.length - 8)
-  }
+    let id = ticket?.masterId
+    return id?.substring(id.length - 8)
+  };
 
   const maskFirstName = (ticket) => {
-    const name = ticket.checkInData.firstName
-    const output = name.replace(MASKNAME_REGEX, "*")
-    return output;
-  } 
+    const name = ticket?.checkInData.firstName
+    const output = name?.replace(MASKNAME_REGEX, "*")
+    return output
+  };
 
   const maskLastName = (ticket) => {
-    const name = ticket.checkInData.lastName
-    const output = name.replace(MASKNAME_REGEX, "*")
-    return output;
-  } 
+    const name = ticket?.checkInData.lastName
+    const output = name?.replace(MASKNAME_REGEX, "*")
+    return output
+  };
   
   const maskEmail = (ticket) => {
-    const email = ticket.checkInData.email
-    const output = email.replace(MASKEMAIL_REGEX, "$1*****@$2")
-    return output;
-  } 
+    const email = ticket?.checkInData.email
+    const output = email?.replace(MASKEMAIL_REGEX, "$1*****@$2")
+    return output
+  };
 
   const redirectAppStore = () => {
     const OS = platform.os.family
@@ -51,17 +53,17 @@ const CheckinLandingScreen = (props) => {
     } else {
       window.open(PLAY_STORE, '_blank').focus() 
     }
-  }
+  };
 
   const hideBanner = () => {
     try {
-      if (ticket.query === 'true') {
+      if (ticket?.query === 'true') {
         setBanner(false)
       }
     } catch (e) {
       console.error(e)
     }
-  }
+  };
 
   return (
     <CheckinContainer fluid>
@@ -69,7 +71,7 @@ const CheckinLandingScreen = (props) => {
         <CheckinIcon src={Icon} />
         <H1>You have checked in successfully!</H1>
         <TextWrap>
-          <P>{ticket.dealTitle} - Ticket {ticket.counter}</P>
+          <P>{ticket?.dealTitle} - Ticket {ticket?.counter}</P>
           <Subtitle>
             Confirmation ID: {getConfirmationId(ticket)}
           </Subtitle>

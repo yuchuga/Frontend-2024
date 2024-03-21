@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Spinner } from 'reactstrap';
-import { API } from 'aws-amplify';
-import { MASKNAME_REGEX, TICKET_API } from '../../utils/constants';
-import { parseQueryString } from '../../utils';
-import styled from 'styled-components';
-import { IoIosArrowDroprightCircle, IoIosCheckbox } from 'react-icons/io';
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { Button, Container, Spinner } from 'reactstrap'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { IoIosArrowDroprightCircle, IoIosCheckbox } from 'react-icons/io'
+import { API } from 'aws-amplify'
+import { MASKNAME_REGEX, TICKET_API } from '../../utils/constants'
 
-const MasterList = (props) => {
-  
-  const trxId = props.match.params.transactionId;
-  const search = props.location.search;
+const MasterList = () => {
+  //path: /checkin/masterlist/1234?app=true
+  const params = useParams()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
 
-  const params = new URLSearchParams(window.location.search)
-  const queryValue = params.get('app')
+  const trxId = params.transactionId
+  const queryValue = searchParams.get('app')
+  console.log('queryValue',  queryValue)
   
-  const [ticket, setTicket] = useState([]);
-  const [deal, setDeal] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [ticket, setTicket] = useState([])
+  const [deal, setDeal] = useState([])
+  const [loading, setLoading] = useState(false)
   
   useEffect(() => {
-    const controller = new AbortController(); //fix memory leak
-    const signal = controller.signal
-    fetchTickets();
-    return () => {
-      controller.abort()
-    }
-  }, [])
+    const controller = new AbortController() //fix memory leak
+    fetchTickets()
+    return () => controller.abort()
+  }, []);
   
   /*
   Get voucher data from VoucherUser table, query by transactionId
@@ -33,45 +32,38 @@ const MasterList = (props) => {
   */
   const fetchTickets = async () => {
     try {
-      setLoading(true);
-      const queryString = parseQueryString(search)
-      const {hash} = queryString
-      const path = `/checkin/masterlist/${trxId}?hash=${hash}`
+      setLoading(true)
+      const path = `/checkin/masterlist/${trxId}?hash=${queryValue}`
       const result = await API.get(TICKET_API, path)
       const data = JSON.parse(result.body).sort(compareValues)
-      setTicket(data);
+      setTicket(data)
       const dealResult = JSON.parse(result.dealBody)
-      setDeal(dealResult);
-      setLoading(false);
+      setDeal(dealResult)
+      setLoading(false)
     } catch (e) {
       console.log('Error in FetchTickets:', e)
     }
-  }
-
-  // console.log('Ticket', ticket)
-  // console.log('Deal', deal)
+  };
 
   //Sort by masterId
   const compareValues = (a, b) => { 
     return ((a.masterId > b.masterId) ? 1 : -1)
-  }
+  };
 
   const handleClick = (item, index) => {
     const ticketNumber = `${index+1}/${ticket.length}`
 
-    const addParameters = {
+    //pass data from parent to child component
+    const data = {
       ...item,
       counter: ticketNumber, 
       dealTitle: deal.promotion_caption, 
       query: queryValue
-    }
-
-    const CheckinLandingScreen = {pathname: '/checkin/success', state: addParameters};
-    const TicketFormScreen = {pathname: `/checkin/${item.masterId}`, state: addParameters};
+    };
 
     //Redirect to success or webform page
-    item.valid ? props.history.push(CheckinLandingScreen) : props.history.push(TicketFormScreen)
-  }
+    item.valid ? navigate('/checkin/success', {state: { data }}) : navigate(`/checkin/${item.masterId}`, {state: { data }})
+  };
 
   const getConfirmationId = (ticket) => {
     let id = ticket.masterId
@@ -112,7 +104,7 @@ const MasterList = (props) => {
     }
     </TicketContainer>
   )
-}
+} 
 
 const TicketContainer = styled(Container)`
   display: flex;
