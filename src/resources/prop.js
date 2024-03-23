@@ -35,18 +35,3 @@ function Tool({name="Designer", tool="Adobe XD"}) {
 
 }
 export default Tool
-
-toggle = (e) => {
-  const { name } = e.target;
-  this.setState(prevState => ({
-      [name]: !prevState[name]
-    }),
-    () => console.log(`this.state`, this.state) //debug class component state
-  );
-};
-
-export default class User extends React.Component {
-  constructor(props) { //use props in constructor only. this.props in other sections
-    super()
-  }
-}
