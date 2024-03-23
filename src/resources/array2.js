@@ -5,9 +5,12 @@ const list = [
   { name: 'Album', price: 5 },
   { name: 'Phone', price: 500 },
   { name: 'Computer', price: 1000 }
-]
+];
 
-const list2 = []
+const list2 = [];
+
+const arr = [10, 3, 26, 7, 9, 3];
+const num = [11, 30, 22, 9, 19]
 
 //No Mutation of Original Array
 /** Map **/
@@ -24,30 +27,46 @@ list.forEach((item) => {
 /** Filter **/
 const filteredList = list.filter((item) => item.price > 100)
 // console.log(filteredList)
+const filterNum = num.filter(num => num > 20)
 
 /** Find **/
 const bookItem = list.find((item) => item.name === 'Book')
 // console.log(bookItem)
 
-/** Some - returns true/false if ANY element pass condition **/
-const inexpensiveItem = list.some((item) => item.price < 100)
+/** Find Index **/
+const index = arr.findIndex((item) => item > 20) //index of 1st element satisfy condition
+if (index >= 0) { //found in arr
+  const temp = arr[index] += 1
+  // console.log(temp) //27
+}
+
+/** Some **/
+const inexpensiveItem = list.some((item) => item.price < 100) //returns true or false if ANY element pass conditio
 const phone = list.some((item) => item.name === 'Phone')
 // console.log(inexpensiveItem)
 // console.log(phone)
 
-/** Every - returns true/false if EVERY element pass condition **/
-const inexpensiveItems = list.every((item) => item.price < 500)
+/** Every **/
+const inexpensiveItems = list.every((item) => item.price < 500) //returns true or false if EVERY element pass condition
 // console.log(inexpensiveItems)
 
-/** Includes - returns true/false if ANY element pass condition **/
-const check = list.map((item) => item.price).includes(500) 
+/** Includes **/
+const check = list.map((item) => item.price).includes(500) //returns true or false if ANY element pass condition
 // console.log(check)
 
-/** Reduce - initialValue will be array[0] if not specified **/
-const sum = list.reduce((acc, item) => {
-  return item.price + acc
+/** Reduce **/
+const sum = list.reduce((acc, currentItem) => {
+  console.log('acc', acc)
+  console.log('curr', currentItem.price) 
+  return currentItem.price + acc
 }, 0) 
+/* currentValue = array[0] & acc = 0 if initial value specified. 
+  Otherwise currentValue = array[1] & acc value = arr[0]
+*/
 // console.log(sum)
+
+const total = num.reduce((acc, curr) => acc + curr)
+console.log(total)
 
 /** For Loop **/
 const calculateSum = (list) => {
@@ -65,7 +84,8 @@ const numbers = [1, 2, 3, 4, 5]
 // destructure array 
 const [a,, c, ...rest] = alphabet
 // console.log(c)
+
 // concat 2 arrays
 const newArray = [...alphabet, ...numbers]
 const newArray2 = alphabet.concat(numbers)
-// console.log(newArray2)
+console.log(newArray2)

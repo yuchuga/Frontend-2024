@@ -8,10 +8,3 @@ function message() {
 setTimeout(() => { 
   message()
 }, 3000);
-
-
-const person = {
-  name: 'John',
-  age: 30,
-  location: 'Dubai'
-};

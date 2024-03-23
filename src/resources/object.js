@@ -1,3 +1,9 @@
+const user = {
+  name: 'John',
+  age: 30,
+  location: 'Dubai'
+};
+
 const person = {
   name: 'Sally',
   age: 32,
@@ -21,6 +27,7 @@ const { name, age, ...rest } = person
 //concat 2 objects
 const person3 = {...person, ...person2}
 // console.log(person3)
+
 const printUser = ({ name, age, food = 'Watermelon' }) => {
   console.log(`Name is ${name}, Age is ${age}, Food is ${food}`)
 }

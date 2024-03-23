@@ -31,9 +31,10 @@ const updateUsers = users.map(obj => {
 // rename column
 const result = books.map(({ login, ...item }) => ({ ...item, trader: login }))
 
-// compare 2 JSON array based on id column & return another column from one of the JSON array
+// compare 2 JSON array based on id column & return another column (key - group) from 2nd JSON array
 const newUsers = users.map(obj1 => {
   const matchId = userGroups.find(obj2 => obj2.id === obj1.groupId)
+  // console.log(matchId)
   return { ...obj1, group: matchId.name }
 })
 
@@ -60,15 +61,16 @@ const customerNames = () => {
     const matchId = customerConfidentials.find((obj2) => obj2.customerId === obj1.customerId)
     return matchId ? {...obj1, customer: matchId.displayName} : { ...obj1, customer: '' }
   })
-  console.log('Result', result)
+  // console.log('Result', result)
   return result
 };
 
 /** Remove Duplicates **/
+const arr = [10, 3, 26, 7, 9, 3];
+
 const uniqueArr = (arr) => {
   return [...new Set(arr)]
 };
-const arr = [10, 3, 26, 7, 9, 3]
 const newArr = uniqueArr(arr)
 // console.log('new', newArr)
 
@@ -77,28 +79,15 @@ const uniqueArr2 = (arr) => {
   arr.forEach((item) => {
     if (!result.includes(item)) {
       result.push(item)
+      // console.log(result)
     }
   })
 }
-
-/** Reduce Method **/
-const num = [11, 30, 22, 9, 19]
-const sum = num.reduce((acc, curr) => acc + curr)
-// console.log(sum)
-
-/** Filter Method **/
-const filterNum = num.filter(num => num > 20)
-// console.log(filterNum)
-
-/** Find Index Method **/
-const index = arr.findIndex((item) => item > 20)
-if (index >= 0) { //found in arr
-  const temp = arr[index] += 1
-  // console.log(temp)
-}
+uniqueArr2(arr)
 
 /** Return new array of items from start to exclude end index & append behind array **/
 const array = [1, 3, 5, 7, 9]
 const fields = array.slice(0, 3)
+console.log(fields)
 const newFields = array.slice(3, array.length).concat(fields)
 // console.log('newFields', newFields)

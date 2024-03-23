@@ -1,4 +1,4 @@
-//encapsulation
+//Encapsulation
 const employee = {
   salary: 30000, //property
   overtime: 10,
@@ -10,7 +10,7 @@ const employee = {
 
 console.log(employee.getWage())
 
-//abstraction
+//Abstraction
 function Employee (name, age, salary) {
   this.name = name
   this.age = age
@@ -22,16 +22,17 @@ function Employee (name, age, salary) {
     const finalSalary = salary + monthlyBonus
     console.log('Final Salary', finalSalary)
   }
+
   this.getEmpDetails = function () {
-    console.log('Name: ' + this.name + '| Age: ' + this.age)
+    console.log('Name: ' + this.name + ' | Age: ' + this.age)
     calculateSalary()
   }
-}
+};
 
 let emp = new Employee('John', 31, 20000)
 emp.getEmpDetails();
 
-//inheritance
+//Inheritance
 
 
-//polymorphism
+//Polymorphism
