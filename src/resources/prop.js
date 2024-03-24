@@ -20,8 +20,8 @@ function Tool({name, tool}) {
 function Tool(props) {
   return (
     <div>
-      <h1>My name is {props.name}.</h1>
-      <p>My favorite design tool is {props.tool}.</p>
+      <h1>My name is {props.name}</h1>
+      <p>My favorite design tool is {props.tool}</p>
     </div>
   );
 }
@@ -31,7 +31,7 @@ Tool.defaultProps = {
   tool: "Adobe XD"
 }
 //Props are IMMUTABLE & cause a re-render
-function Tool({name="Designer", tool="Adobe XD"}) {
+function Tool({ name="Designer", tool="Adobe XD" }) {
 
 }
 export default Tool
